@@ -14,6 +14,7 @@ interface ContactSectionProps {
   total: number;
   weeks: number;
   onOpenMultiStepCodeModal: () => void;
+  onSuccessSubmission?: (leadData: { fullName: string; companyName: string; referenceId: string }) => void;
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
@@ -21,6 +22,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   total,
   weeks,
   onOpenMultiStepCodeModal,
+  onSuccessSubmission,
 }) => {
   return (
     <section id="contacto" className="py-24 border-t border-white/5 relative">
@@ -44,6 +46,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           calcState={calcState}
           estimatedTotal={total}
           onOpenMultiStepCodeModal={onOpenMultiStepCodeModal}
+          onSuccessSubmission={onSuccessSubmission}
         />
 
         {/* Executive Direct Contact Strip */}

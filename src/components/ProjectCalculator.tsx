@@ -27,12 +27,20 @@ interface ProjectCalculatorProps {
   initialSolution?: SolutionType;
   onOpenProposalModal: (calcState: CalculatorState, total: number, weeks: number) => void;
   onOpenWidgetCodeModal: () => void;
+  onFinalizeEstimation?: (data: {
+    total: number;
+    weeks: number;
+    solutionTitle: string;
+    scaleTitle: string;
+    state: CalculatorState;
+  }) => void;
 }
 
 export const ProjectCalculator: React.FC<ProjectCalculatorProps> = ({
   initialSolution,
   onOpenProposalModal,
   onOpenWidgetCodeModal,
+  onFinalizeEstimation,
 }) => {
   const [solutionType, setSolutionType] = useState<SolutionType>(initialSolution || 'software');
   const [scale, setScale] = useState<ProjectScale>('pyme');
@@ -101,14 +109,24 @@ export const ProjectCalculator: React.FC<ProjectCalculatorProps> = ({
     );
   };
 
-  const handleRequestProposal = () => {
+  const handleFinalizeEstimation = () => {
     const state: CalculatorState = {
       solutionType,
       scale,
       deliverySpeed,
       selectedAddons,
     };
-    onOpenProposalModal(state, rawTotal, calculatedWeeks);
+    if (onFinalizeEstimation) {
+      onFinalizeEstimation({
+        total: rawTotal,
+        weeks: calculatedWeeks,
+        solutionTitle: currentSolution.title,
+        scaleTitle: currentScale.title,
+        state,
+      });
+    } else {
+      onOpenProposalModal(state, rawTotal, calculatedWeeks);
+    }
   };
 
   return (
@@ -505,12 +523,12 @@ export const ProjectCalculator: React.FC<ProjectCalculatorProps> = ({
                 {/* Primary CTA Button */}
                 <div className="pt-4 space-y-3">
                   <button
-                    onClick={handleRequestProposal}
+                    onClick={handleFinalizeEstimation}
                     type="button"
-                    className="w-full py-4 px-6 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99]"
+                    className="w-full py-4 px-6 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                   >
-                    <FileText className="w-4 h-4 text-slate-950" />
-                    <span>Solicitar Propuesta Formal</span>
+                    <Sparkles className="w-4 h-4 text-slate-950" />
+                    <span>Finalizar Estimación y Solicitar Propuesta</span>
                     <ArrowRight className="w-4 h-4 text-slate-950" />
                   </button>
 

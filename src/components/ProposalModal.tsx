@@ -28,6 +28,7 @@ interface ProposalModalProps {
   calcState: CalculatorState | null;
   total: number;
   weeks: number;
+  onSuccessSubmission?: (refId: string, company: string, name: string) => void;
 }
 
 export const ProposalModal: React.FC<ProposalModalProps> = ({
@@ -36,6 +37,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({
   calcState,
   total,
   weeks,
+  onSuccessSubmission,
 }) => {
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
@@ -61,6 +63,7 @@ export const ProposalModal: React.FC<ProposalModalProps> = ({
     setProposalRefId(randomRef);
     setIsSubmitted(true);
     triggerCorporateConfetti();
+    onSuccessSubmission?.(randomRef, companyName, fullName);
   };
 
   const handleDownloadSummary = () => {
@@ -109,8 +112,8 @@ GARANTÍAS SMITH BUSINESS SOLUTIONS:
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-2xl my-8 glass-panel-elevated rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl my-auto glass-panel-elevated rounded-2xl border border-white/20 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
         {/* Header */}
         <div className="px-6 py-5 border-b border-white/10 flex items-center justify-between bg-slate-950/70">
           <div className="flex items-center gap-3">
@@ -203,7 +206,7 @@ GARANTÍAS SMITH BUSINESS SOLUTIONS:
             </div>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="p-5 sm:p-8 space-y-5 sm:space-y-6 overflow-y-auto flex-1">
             {/* Preloaded Calculator Summary Card */}
             <div className="p-4 rounded-xl bg-gradient-to-r from-blue-950/40 via-slate-900/60 to-amber-950/20 border border-white/10 space-y-3">
               <div className="flex items-center justify-between text-xs">

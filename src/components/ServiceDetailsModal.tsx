@@ -30,8 +30,8 @@ export const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-3xl my-8 glass-panel-elevated rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-3xl my-auto glass-panel-elevated rounded-2xl border border-white/20 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
         {/* Header Image Banner */}
         <div className="relative aspect-[16/8] sm:aspect-[21/9] overflow-hidden bg-slate-900">
           <img
@@ -63,7 +63,7 @@ export const ServiceDetailsModal: React.FC<ServiceDetailsModalProps> = ({
         </div>
 
         {/* Modal Content */}
-        <div className="p-6 sm:p-8 space-y-6">
+        <div className="p-5 sm:p-8 space-y-6 overflow-y-auto flex-1">
           <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
             {service.fullDesc}
           </p>

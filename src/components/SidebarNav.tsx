@@ -207,7 +207,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({
 
       {/* 3. Slide-Out Sidebar Drawer */}
       <aside
-        className={`fixed top-0 left-0 bottom-0 w-[320px] sm:w-[380px] z-50 bg-[#060911]/98 border-r border-white/15 backdrop-blur-2xl shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+        className={`fixed top-0 left-0 bottom-0 w-[85vw] max-w-[360px] sm:w-[380px] z-50 bg-[#060911]/98 border-r border-white/15 backdrop-blur-2xl shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-label="Menú de Navegación de Secciones Smith Business Solutions"

@@ -22,6 +22,7 @@ import { EcommerceGrowthHook } from './components/EcommerceGrowthHook';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { PerformanceMetricsDashboard } from './components/PerformanceMetricsDashboard';
 import { SidebarNav } from './components/SidebarNav';
+import { SuccessAnimationOverlay, SuccessOverlayData } from './components/SuccessAnimationOverlay';
 import { CalculatorState, ServiceItem, SolutionType, WhitepaperItem } from './types';
 
 export default function App() {
@@ -49,6 +50,15 @@ export default function App() {
 
   const [prefilledTotal, setPrefilledTotal] = useState<number>(5880);
   const [prefilledWeeks, setPrefilledWeeks] = useState<number>(5);
+
+  // Success animation overlay state for contact form and calculator finalization
+  const [successOverlay, setSuccessOverlay] = useState<{
+    isOpen: boolean;
+    data: SuccessOverlayData | null;
+  }>({
+    isOpen: false,
+    data: null,
+  });
 
   // Scroll helpers
   const scrollToCalculator = () => {
@@ -112,8 +122,70 @@ export default function App() {
     setIsProposalModalOpen(true);
   };
 
+  // Success overlay trigger handlers
+  const handleFinalizeEstimation = (data: {
+    total: number;
+    weeks: number;
+    solutionTitle: string;
+    scaleTitle: string;
+    state: CalculatorState;
+  }) => {
+    setCalcState(data.state);
+    setPrefilledTotal(data.total);
+    setPrefilledWeeks(data.weeks);
+
+    setSuccessOverlay({
+      isOpen: true,
+      data: {
+        type: 'project_estimation',
+        title: '¡Estimación de Proyecto Finalizada!',
+        subtitle:
+          'Estructura presupuestaria y cronograma calculados con éxito según tus especificaciones.',
+        total: data.total,
+        weeks: data.weeks,
+        solutionTitle: data.solutionTitle,
+        scaleTitle: data.scaleTitle,
+        primaryActionLabel: 'Formalizar en Propuesta Formal',
+        onPrimaryAction: () => {
+          setIsProposalModalOpen(true);
+        },
+      },
+    });
+  };
+
+  const handleContactSuccess = (leadData: { fullName: string; companyName: string; referenceId: string }) => {
+    setSuccessOverlay({
+      isOpen: true,
+      data: {
+        type: 'contact_form',
+        title: '¡Solicitud Registrada Exitosamente!',
+        subtitle: `Estimado/a ${leadData.fullName}, tu solicitud para ${leadData.companyName} ha sido formalizada con éxito.`,
+        referenceId: leadData.referenceId,
+        clientName: leadData.fullName,
+        companyName: leadData.companyName,
+      },
+    });
+  };
+
+  const handleProposalSuccess = (refId: string, company: string, name: string) => {
+    setSuccessOverlay({
+      isOpen: true,
+      data: {
+        type: 'contact_form',
+        title: '¡Propuesta Formal Registrada!',
+        subtitle:
+          'Hemos recibido tus parámetros y especificaciones técnicas. Un director comercial te contactará en menos de 2 horas.',
+        referenceId: refId,
+        clientName: name,
+        companyName: company || 'Empresa',
+        total: prefilledTotal,
+        weeks: prefilledWeeks,
+      },
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col selection:bg-amber-400 selection:text-slate-950 relative">
+    <div className="min-h-screen bg-[#030712]/80 bg-subtle-grid text-slate-100 flex flex-col selection:bg-amber-400 selection:text-slate-950 relative backdrop-blur-[0.5px]">
       {/* Immersive 3D Holographic Ambient HUD Background */}
       <ThreeBackground
         interactiveMode={isHologram3DActive}
@@ -170,6 +242,7 @@ export default function App() {
           initialSolution={calcState.solutionType}
           onOpenProposalModal={handleOpenProposal}
           onOpenWidgetCodeModal={() => setIsWidgetModalOpen(true)}
+          onFinalizeEstimation={handleFinalizeEstimation}
         />
 
         {/* Quantified Empirical Growth Visualizer: Recharts Performance Metrics Dashboard */}
@@ -207,6 +280,7 @@ export default function App() {
           total={prefilledTotal}
           weeks={prefilledWeeks}
           onOpenMultiStepCodeModal={() => setIsMultiStepModalOpen(true)}
+          onSuccessSubmission={handleContactSuccess}
         />
       </main>
 
@@ -249,6 +323,7 @@ export default function App() {
         calcState={calcState}
         total={prefilledTotal}
         weeks={prefilledWeeks}
+        onSuccessSubmission={handleProposalSuccess}
       />
 
       <ServiceDetailsModal
@@ -279,6 +354,13 @@ export default function App() {
           setActiveWhitepaper(null);
           scrollToContact();
         }}
+      />
+
+      {/* Subtle Confetti & Success Animation Overlay */}
+      <SuccessAnimationOverlay
+        isOpen={successOverlay.isOpen}
+        onClose={() => setSuccessOverlay((prev) => ({ ...prev, isOpen: false }))}
+        data={successOverlay.data}
       />
     </div>
   );

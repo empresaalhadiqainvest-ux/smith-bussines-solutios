@@ -70,11 +70,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => setShowCodeDropdown(!showCodeDropdown)}
               type="button"
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white rounded-lg border border-white/10 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 text-xs font-medium text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white rounded-lg border border-white/10 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
               title="Ver códigos Vanilla (HTML, CSS y JS puro)"
             >
               <Code2 className="w-3.5 h-3.5 text-amber-400" />
-              <span>Códigos Vanilla</span>
+              <span className="hidden sm:inline">Códigos Vanilla</span>
               <span className="text-[10px] text-slate-400">▼</span>
             </button>
 
@@ -118,10 +118,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onScrollToCalculator}
             type="button"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-slate-950 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 rounded-lg shadow-md shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs font-semibold text-slate-950 bg-gradient-to-r from-amber-300 to-amber-400 hover:from-amber-200 hover:to-amber-300 rounded-lg shadow-md shadow-amber-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap shrink-0 cursor-pointer"
           >
             <Calculator className="w-3.5 h-3.5" />
-            <span>Estimar Proyecto</span>
+            <span className="hidden sm:inline">Estimar Proyecto</span>
+            <span className="sm:hidden">Estimar</span>
           </button>
         </div>
       </div>

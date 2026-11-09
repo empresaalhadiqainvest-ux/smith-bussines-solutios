@@ -44,22 +44,51 @@ export const SpotlightServicesGrid: React.FC<SpotlightServicesGridProps> = ({
       card.style.setProperty('--mouse-x', `${x}px`);
       card.style.setProperty('--mouse-y', `${y}px`);
       card.style.setProperty('--spotlight-opacity', '1');
+
+      // 3D Perspective Tilt in Motion
+      const tiltX = (y / rect.height - 0.5) * -7;
+      const tiltY = (x / rect.width - 0.5) * 7;
+      card.style.transform = `perspective(900px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-4px)`;
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
       const card = e.currentTarget as HTMLElement;
       card.style.setProperty('--spotlight-opacity', '0');
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const card = e.currentTarget as HTMLElement;
+        const rect = card.getBoundingClientRect();
+        const x = e.touches[0].clientX - rect.left;
+        const y = e.touches[0].clientY - rect.top;
+
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+        card.style.setProperty('--spotlight-opacity', '1');
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const card = e.currentTarget as HTMLElement;
+      card.style.setProperty('--spotlight-opacity', '0');
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateY(0)';
     };
 
     cards.forEach((card) => {
       card.addEventListener('mousemove', handleMouseMove);
       card.addEventListener('mouseleave', handleMouseLeave);
+      card.addEventListener('touchmove', handleTouchMove, { passive: true });
+      card.addEventListener('touchend', handleTouchEnd);
     });
 
     return () => {
       cards.forEach((card) => {
         card.removeEventListener('mousemove', handleMouseMove);
         card.removeEventListener('mouseleave', handleMouseLeave);
+        card.removeEventListener('touchmove', handleTouchMove);
+        card.removeEventListener('touchend', handleTouchEnd);
       });
     };
   }, []);
@@ -77,8 +106,7 @@ export const SpotlightServicesGrid: React.FC<SpotlightServicesGridProps> = ({
           }`}
         >
           <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-amber-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <div className="text-xs font-semibold tracking-wider uppercase text-amber-400">
               Ingeniería, Sistemas & Estrategia Financiera
             </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight [text-wrap:balance]">

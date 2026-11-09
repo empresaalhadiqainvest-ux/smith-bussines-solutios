@@ -1,5 +1,6 @@
-import React from 'react';
-import { ArrowRight, Calculator, CheckCircle2, Eye, ShieldCheck, Sparkles, Zap } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Calculator, CheckCircle2, Eye, Image as ImageIcon, Maximize2, ShieldCheck, Sparkles, Zap } from 'lucide-react';
+import { Hero3DCanvas } from './Hero3DCanvas';
 
 interface HeroProps {
   onScrollToCalculator: () => void;
@@ -12,6 +13,7 @@ export const Hero: React.FC<HeroProps> = ({
   onScrollToServices,
   onOpenHologram,
 }) => {
+  const [heroViewMode, setHeroViewMode] = useState<'3d' | 'photo'>('3d');
   return (
     <section id="inicio" className="relative pt-12 pb-20 overflow-hidden">
       {/* Background ambient lighting */}
@@ -23,10 +25,9 @@ export const Hero: React.FC<HeroProps> = ({
           <div className="lg:col-span-7 space-y-6">
             {/* Executive Kicker & Holding Identification */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-emerald-500/40 backdrop-blur-xl text-[11px] font-bold tracking-widest uppercase text-emerald-400 shadow-lg shadow-emerald-500/10">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>AL-HADIQA INVEST HOLDING</span>
-              </div>
+              <span className="text-xs font-mono font-bold tracking-widest uppercase text-emerald-400">
+                AL-HADIQA INVEST HOLDING
+              </span>
               <span className="text-slate-500 text-xs hidden sm:inline">·</span>
               <span className="text-xs font-mono font-semibold text-amber-300 tracking-wider uppercase">
                 División Global E-Commerce & IA
@@ -55,16 +56,16 @@ export const Hero: React.FC<HeroProps> = ({
               </p>
             </div>
 
-            <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed [text-wrap:balance] font-normal border-l-2 border-emerald-500/40 pl-4 py-0.5">
+            <p className="text-sm sm:text-base text-slate-300 max-w-2xl leading-relaxed [text-wrap:balance] font-normal">
               Ingeniería digital corporativa orientada a maximizar conversiones y facturación sin fricción técnica. Diseñamos tiendas online ultra-rápidas, plataformas web a medida y bots comerciales en WhatsApp para empresas globales en expansión.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
               <button
                 onClick={onScrollToCalculator}
                 type="button"
-                className="inline-flex items-center gap-2.5 px-6 py-3.5 text-sm font-semibold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 text-sm font-semibold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/25 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer text-center"
               >
                 <Calculator className="w-4 h-4 text-slate-950" />
                 <span>Calcular Presupuesto Online</span>
@@ -74,7 +75,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 onClick={onOpenHologram}
                 type="button"
-                className="inline-flex items-center gap-2 px-5 py-3.5 text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 rounded-xl border border-cyan-400/40 shadow-lg shadow-cyan-500/10 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3.5 text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 rounded-xl border border-cyan-400/40 shadow-lg shadow-cyan-500/10 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-center"
               >
                 <Eye className="w-4 h-4 text-cyan-400" />
                 <span>Holograma Sostana 3D</span>
@@ -83,7 +84,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 onClick={onScrollToServices}
                 type="button"
-                className="inline-flex items-center gap-2 px-5 py-3.5 text-sm font-medium text-slate-200 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-colors cursor-pointer"
+                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3.5 text-sm font-medium text-slate-200 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-colors cursor-pointer text-center"
               >
                 <span>Explorar Soluciones</span>
               </button>
@@ -106,36 +107,74 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
           </div>
 
-          {/* Right Column: Visual Anchor */}
+          {/* Right Column: Visual 3D Hero Anchor */}
           <div className="lg:col-span-5 relative">
-            <div
-              onClick={onOpenHologram}
-              title="Click para interactuar en 3D en tiempo real"
-              className="relative rounded-2xl p-1.5 bg-gradient-to-b from-cyan-400/30 via-white/10 to-transparent shadow-2xl shadow-cyan-500/10 cursor-pointer group hover:scale-[1.01] transition-transform"
-            >
+            {/* View Switcher Tabs (3D en Vivo / Fotograma HD) */}
+            <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center gap-1 p-1 bg-slate-900/90 border border-white/10 rounded-xl backdrop-blur-md">
+                <button
+                  type="button"
+                  onClick={() => setHeroViewMode('3d')}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                    heroViewMode === '3d'
+                      ? 'bg-gradient-to-r from-cyan-400 to-cyan-300 text-slate-950 shadow-md'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>3D Interactivo</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setHeroViewMode('photo')}
+                  className={`px-3 py-1 text-xs font-medium rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                    heroViewMode === 'photo'
+                      ? 'bg-gradient-to-r from-cyan-400 to-cyan-300 text-slate-950 shadow-md font-bold'
+                      : 'text-slate-400 hover:text-white'
+                  }`}
+                >
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  <span>Sala HD</span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={onOpenHologram}
+                className="text-xs text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <span>Explorar Sala 3D</span>
+                <Maximize2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="relative rounded-2xl p-1.5 bg-gradient-to-b from-cyan-400/30 via-white/10 to-transparent shadow-2xl shadow-cyan-500/10">
               <div className="relative overflow-hidden rounded-[14px] bg-[#070b16] aspect-[16/10] sm:aspect-[16/9] lg:aspect-[4/3] border border-cyan-400/20">
-                <img
-                  src="/assets/aistudio/Gemini_Generated_Image_o8cvmao8cvmao8cv_28a933f0.jpeg"
-                  alt="Avatar Holográfico Sostana Core AI en Sala de Juntas Corporativa de Smith Business Solutions"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent opacity-80" />
-                
-                {/* Embedded floating glass card */}
-                <div className="absolute bottom-4 left-4 right-4 glass-panel-elevated p-3.5 rounded-xl flex items-center justify-between border border-cyan-400/30 backdrop-blur-xl">
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                      <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-300">Sostana Core AI</p>
+                {heroViewMode === '3d' ? (
+                  <Hero3DCanvas onOpenFullscreenHologram={onOpenHologram} />
+                ) : (
+                  <div className="relative w-full h-full group cursor-pointer" onClick={onOpenHologram}>
+                    <img
+                      src="/assets/aistudio/Gemini_Generated_Image_o8cvmao8cvmao8cv_28a933f0.jpeg"
+                      alt="Avatar Holográfico Sostana Core AI en Sala de Juntas Corporativa de Smith Business Solutions"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent opacity-80" />
+                    
+                    {/* Embedded floating glass card */}
+                    <div className="absolute bottom-4 left-4 right-4 glass-panel-elevated p-3.5 rounded-xl flex items-center justify-between border border-cyan-400/30 backdrop-blur-xl">
+                      <div>
+                        <p className="text-[11px] font-bold uppercase tracking-wider text-cyan-300">Sostana Core AI</p>
+                        <p className="text-xs font-extrabold text-white">Sala de Estrategia Global 3D</p>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs font-mono font-bold text-amber-300 tabular-nums">Smith Solutions</span>
+                        <p className="text-[10px] text-slate-400">Al-Hadiqa Invest</p>
+                      </div>
                     </div>
-                    <p className="text-xs font-extrabold text-white">Sala de Estrategia Global 3D</p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs font-mono font-bold text-amber-300 tabular-nums">Smith Solutions</span>
-                    <p className="text-[10px] text-slate-400">Al-Hadiqa Invest</p>
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

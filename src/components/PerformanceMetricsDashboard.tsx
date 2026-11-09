@@ -263,7 +263,7 @@ Contacto Directo: empresaalhadiqainvest@gmail.com | WhatsApp: +58 422 027 3766 (
         </div>
 
         {/* 4 Executive KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div className="p-5 rounded-2xl bg-slate-900/60 border border-emerald-500/20 backdrop-blur-xl relative overflow-hidden">
             <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
               <span>Incremento en CR</span>

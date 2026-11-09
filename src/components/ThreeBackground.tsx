@@ -891,6 +891,12 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
     };
     window.addEventListener('resize', onResize);
 
+    let scrollY = window.scrollY || 0;
+    const onScroll = () => {
+      scrollY = window.scrollY || 0;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     // Camera preset controller
     setPresetRef.current = (preset: 'default' | 'close' | 'hud') => {
       setActivePreset(preset);
@@ -930,15 +936,16 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Camera lerp with mouse parallax
-      const panFactor = isInteractive ? 18 : 6;
+      // Camera lerp with mouse parallax and scroll parallax in 3D
+      const panFactor = isInteractive ? 18 : 8;
+      const scrollOffset = isInteractive ? 0 : Math.min(scrollY * 0.012, 16);
       const desiredX = targetCameraX + mouseX * panFactor;
-      const desiredY = targetCameraY - mouseY * (panFactor * 0.4);
+      const desiredY = targetCameraY - mouseY * (panFactor * 0.4) - scrollOffset;
 
       camera.position.x += (desiredX - camera.position.x) * 0.05;
       camera.position.y += (desiredY - camera.position.y) * 0.05;
       camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
-      camera.lookAt(0, 11, 5);
+      camera.lookAt(0, 11 - scrollOffset * 0.4, 5);
 
       // Hologram Laser Scan Sweep (0 to 22 units along Y)
       currentScanY += scanDirection * 0.22;
@@ -1000,6 +1007,7 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(animationFrameId);
 
       renderer.dispose();
@@ -1031,17 +1039,19 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
 
   return (
     <>
-      {/* Three.js Canvas Container (Ambient background when browsing, full screen when inspected) */}
+      {/* Three.js Canvas Container (Ambient 3D background in motion when browsing, full screen when inspected) */}
       <div
         ref={mountRef}
         className={`fixed inset-0 transition-opacity duration-700 ${
-          isInteractive ? 'z-30 pointer-events-auto' : '-z-10 pointer-events-none opacity-85'
+          isInteractive
+            ? 'z-30 pointer-events-auto opacity-100'
+            : 'z-0 pointer-events-none opacity-60'
         }`}
         aria-hidden="true"
       />
 
       {/* Floating Toggle Pill (Always available in top-right or hero to switch to 3D Inspection Mode) */}
-      <div className="fixed top-20 right-6 z-40 hidden sm:block">
+      <div className={`fixed top-20 right-4 sm:right-6 z-40 ${isInteractive ? 'block' : 'hidden sm:block'}`}>
         <button
           onClick={() => {
             const next = !isInteractive;
@@ -1094,7 +1104,7 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
               {/* Top Header: Badge + Plaque Info */}
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
                   <div>
                     <span className="text-xs font-bold text-white block">
                       SOSTANA CORE AI · SMITH BUSINESS SOLUTIONS

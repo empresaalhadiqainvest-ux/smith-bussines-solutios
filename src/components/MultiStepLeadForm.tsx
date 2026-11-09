@@ -30,6 +30,7 @@ interface MultiStepLeadFormProps {
   calcState?: CalculatorState;
   estimatedTotal?: number;
   onOpenMultiStepCodeModal?: () => void;
+  onSuccessSubmission?: (leadData: { fullName: string; companyName: string; referenceId: string }) => void;
 }
 
 interface FormData {
@@ -53,6 +54,7 @@ export const MultiStepLeadForm: React.FC<MultiStepLeadFormProps> = ({
   calcState,
   estimatedTotal,
   onOpenMultiStepCodeModal,
+  onSuccessSubmission,
 }) => {
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -135,6 +137,11 @@ export const MultiStepLeadForm: React.FC<MultiStepLeadFormProps> = ({
       setReferenceId(ref);
       setIsSubmitted(true);
       triggerCorporateConfetti();
+      onSuccessSubmission?.({
+        fullName: formData.fullName,
+        companyName: formData.companyName,
+        referenceId: ref,
+      });
     }
   };
 
@@ -204,7 +211,7 @@ Smith Business Solutions · Caracas - Dubái - Miami
 
   return (
     <div id="formulario-prospectos" className="w-full max-w-4xl mx-auto my-12">
-      <div className="glass-panel-elevated rounded-3xl p-6 sm:p-10 border border-white/15 shadow-2xl relative overflow-hidden">
+      <div className="glass-panel-elevated rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 border border-white/15 shadow-2xl relative overflow-hidden">
         {/* Glow ambient background */}
         <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
@@ -715,12 +722,12 @@ Smith Business Solutions · Caracas - Dubái - Miami
             )}
 
             {/* Navigational Buttons ("Anterior" & "Siguiente" / "Enviar") */}
-            <div className="pt-4 border-t border-white/10 flex items-center justify-between gap-4">
+            <div className="pt-4 border-t border-white/10 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
               {currentStep > 1 ? (
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-semibold text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 transition-colors cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-semibold text-slate-300 bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Anterior</span>
@@ -733,7 +740,7 @@ Smith Business Solutions · Caracas - Dubái - Miami
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="inline-flex items-center gap-2 px-7 py-3 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
                 >
                   <span>Siguiente Paso</span>
                   <ArrowRight className="w-4 h-4" />
@@ -741,10 +748,10 @@ Smith Business Solutions · Caracas - Dubái - Miami
               ) : (
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-emerald-300 to-amber-300 hover:brightness-110 shadow-xl shadow-emerald-500/25 transition-all cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-emerald-400 via-emerald-300 to-amber-300 hover:brightness-110 shadow-xl shadow-emerald-500/25 transition-all cursor-pointer text-center"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Enviar y Confirmar Solicitud Formal</span>
+                  <span>Enviar y Confirmar Solicitud</span>
                 </button>
               )}
             </div>

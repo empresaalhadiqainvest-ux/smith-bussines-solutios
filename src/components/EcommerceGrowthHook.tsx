@@ -87,9 +87,8 @@ export const EcommerceGrowthHook: React.FC<EcommerceGrowthHookProps> = ({
       <div className="max-w-7xl mx-auto px-6">
         {/* Header with Urgency Hook */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold tracking-wider uppercase shadow-sm">
-            <Flame className="w-3.5 h-3.5 text-amber-400" />
-            <span>Auditor de Fricción & Fuga de Ventas E-Commerce</span>
+          <div className="text-xs font-bold tracking-wider uppercase text-amber-400">
+            Auditor de Fricción & Fuga de Ventas E-Commerce
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight [text-wrap:balance]">
             ¿Cuánto dinero está dejando sobre la mesa tu tienda online?
