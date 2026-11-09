@@ -1,0 +1,6 @@
+{
+  "name": "Smith Business Solutions",
+  "description": "Plataforma empresarial moderna de Smith Business Solutions con calculadora interactiva de estimación de proyectos y catálogo dinámico de servicios corporativos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

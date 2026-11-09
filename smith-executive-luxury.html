@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="es" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smith Business Solutions | Al-Hadiqa Invest Holding</title>
+  <meta name="description" content="Plataforma corporativa de ingeniería digital, automatización de procesos e inteligencia financiera.">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            obsidian: '#030712',
+            charcoal: '#0B0F19',
+            emeraldCustom: '#10B981',
+            goldCustom: '#F59E0B',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #030712;
+      color: #f1f5f9;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Three.js canvas container */
+    #three-bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Glassmorphism Classes */
+    .glass-panel {
+      background: rgba(11, 15, 25, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-panel-elevated {
+      background: rgba(14, 20, 34, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    /* Spotlight Hover Effect */
+    .spotlight-card {
+      position: relative;
+      background-color: #0d1322;
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .spotlight-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(16, 185, 129, 0.1);
+    }
+    .spotlight-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        500px circle at var(--mouse-x, -999px) var(--mouse-y, -999px),
+        rgba(245, 158, 11, 0.14),
+        rgba(16, 185, 129, 0.08) 35%,
+        transparent 70%
+      );
+      opacity: var(--spotlight-opacity, 0);
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Metallic Luxury Gradients */
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #ffffff 0%, #fef08a 45%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-slate-950">
+
+  <!-- 3D Holographic Core Background (Three.js WebGL) -->
+  <div id="three-bg-canvas"></div>
+
+  <!-- Header / Nav -->
+  <header class="sticky top-0 z-40 w-full glass-panel border-b border-white/10 transition-all">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-500 to-amber-400 p-[1px] flex items-center justify-center">
+          <div class="w-full h-full bg-[#030712] rounded-[7px] flex items-center justify-center text-xs font-black text-amber-400">
+            SBS
+          </div>
+        </div>
+        <div>
+          <span class="text-sm sm:text-base font-bold text-white tracking-tight">Smith Business Solutions</span>
+          <span class="hidden sm:inline-block text-[10px] text-amber-400 ml-2 font-mono uppercase tracking-wider">· Al-Hadiqa Holding</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#servicios" class="hover:text-white transition-colors">Servicios</a>
+        <a href="#precios" class="hover:text-white transition-colors">Precios</a>
+        <a href="#calculadora" class="hover:text-white transition-colors">Calculadora</a>
+        <a href="#insights" class="hover:text-white transition-colors text-amber-300">Insights</a>
+        <a href="#contacto" class="hover:text-white transition-colors">Contacto</a>
+      </nav>
+
+      <a href="#calculadora" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-300 to-amber-400 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/20 transition-transform active:scale-95">
+        <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+        <span>Calcular Presupuesto</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Flow -->
+  <main class="relative z-10">
+
+    <!-- Hero Section -->
+    <section class="relative pt-16 pb-24 overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="max-w-3xl space-y-6">
+          <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/80 border border-amber-500/30 text-xs font-semibold tracking-wider uppercase text-amber-400 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Smith Business Solutions · Al-Hadiqa Invest Holding</span>
+          </div>
+
+          <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
+            Arquitectura de software y automatización para <span class="text-gradient-gold">escalar tu operación global.</span>
+          </h1>
+
+          <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+            Diseñamos plataformas web corporativas, automatizamos flujos de trabajo de misión crítica y estructuramos ingeniería financiera para maximizar el margen operativo con estándares internacionales.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-3">
+            <a href="#calculadora" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-300 to-amber-400 hover:brightness-110 rounded-xl shadow-lg shadow-amber-500/20 transition-all hover:-translate-y-0.5">
+              <i data-lucide="calculator" class="w-4 h-4"></i>
+              <span>Calcular Presupuesto Online</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+
+            <a href="#servicios" class="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-medium text-slate-200 bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-colors">
+              <span>Explorar Soluciones</span>
+            </a>
+          </div>
+
+          <!-- Trust Badges -->
+          <div class="pt-6 flex flex-wrap items-center gap-6 text-xs text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+              Estimación transparente en tiempo real
+            </span>
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
+              SLA de rendimiento 99.9%
+            </span>
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+              Activación de sprint en 48 horas
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Spotlight Services Grid (3 Columns) -->
+    <section id="servicios" class="py-20 border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+          <span class="text-xs font-semibold tracking-wider uppercase text-amber-400">Portafolio de Especialidades</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Servicios de Alta Gama Corporativa</h2>
+          <p class="text-sm text-slate-400">Pasa el cursor sobre cada tarjeta para activar la iluminación Spotlight guiada por coordenadas dinámicas.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="spotlight-grid">
+          <!-- Card 1 -->
+          <div class="spotlight-card p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <i data-lucide="bot" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white">Optimización de Procesos & Automatización IA</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Despliegue de agentes inteligentes, orquestación n8n y conciliación financiera autónoma para erradicar cuellos de botella operativos.
+              </p>
+              <div class="pt-2 text-xs font-mono text-emerald-400">-75% Horas manuales auditadas</div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10">
+              <a href="#calculadora" class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+                <span>Estimar Solución</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="spotlight-card p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
+                <i data-lucide="code" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white">Desarrollo de Sistemas & Plataformas Web</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Arquitectura Full-Stack escalable, portales corporativos de alta velocidad, microservicios seguros y dashboards ejecutivos en tiempo real.
+              </p>
+              <div class="pt-2 text-xs font-mono text-amber-300">99.9% Disponibilidad garantizada</div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10">
+              <a href="#calculadora" class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+                <span>Estimar Solución</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="spotlight-card p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+                <i data-lucide="trending-up" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl font-bold text-white">Inteligencia Financiera & Gestión de Riesgo</h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Auditorías integrales de flujo de caja, modelos dinámicos de sensibilidad, optimización de márgenes y asesoría directiva CFO advisory.
+              </p>
+              <div class="pt-2 text-xs font-mono text-cyan-300">+32% Margen EBITDA promedio</div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10">
+              <a href="#calculadora" class="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors">
+                <span>Estimar Solución</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- International Pricing Section (USD / EUR Switcher) -->
+    <section id="precios" class="py-20 border-t border-white/5">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <div class="space-y-2">
+            <span class="text-xs font-semibold tracking-wider uppercase text-amber-400">Planes Globales</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Inversión y Modelos de Trabajo</h2>
+            <p class="text-sm text-slate-400">Precios transparentes y convertibles en tiempo real según la divisa de su corporación.</p>
+          </div>
+
+          <!-- Currency Switcher Toggle -->
+          <div class="flex items-center gap-2 p-1.5 bg-slate-900/90 border border-white/10 rounded-2xl shrink-0">
+            <span class="text-xs text-slate-400 pl-2">Moneda:</span>
+            <button id="btn-currency-usd" onclick="setCurrency('USD')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shadow-md">USD ($)</button>
+            <button id="btn-currency-eur" onclick="setCurrency('EUR')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white">EUR (€)</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Tier 1 -->
+          <div class="glass-panel-elevated rounded-3xl p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">Eficiencia Operativa</span>
+              <h3 class="text-2xl font-bold text-white">Automatización IA</h3>
+              <div class="p-4 rounded-xl bg-black/40 border border-white/5">
+                <span class="text-[10px] text-slate-400 uppercase">Inversión base inicial:</span>
+                <div class="text-3xl font-extrabold text-white font-mono" id="price-tier-1">$1,800 USD</div>
+                <span class="text-[11px] text-slate-500">por pipeline modular</span>
+              </div>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Agentes autónomos Python / n8n</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Integración ERP & CRM legacy</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Alertas y monitoreo proactivo</li>
+              </ul>
+            </div>
+            <a href="#calculadora" class="mt-8 block w-full text-center py-3 bg-white/10 hover:bg-white/15 text-white rounded-xl text-xs font-bold transition-all border border-white/10">Configurar Estimador</a>
+          </div>
+
+          <!-- Tier 2 (Highlighted) -->
+          <div class="glass-panel-elevated rounded-3xl p-8 flex flex-col justify-between border-2 border-amber-400/60 shadow-2xl shadow-amber-500/10">
+            <div class="space-y-4">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-md border border-amber-500/30">Solución Estrella</span>
+              <h3 class="text-2xl font-bold text-white">Sistemas & Portales Cloud</h3>
+              <div class="p-4 rounded-xl bg-black/40 border border-white/5">
+                <span class="text-[10px] text-slate-400 uppercase">Inversión base inicial:</span>
+                <div class="text-3xl font-extrabold text-white font-mono" id="price-tier-2">$3,200 USD</div>
+                <span class="text-[11px] text-slate-500">por plataforma personalizada</span>
+              </div>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Frontend React/TS de ultra velocidad</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Panel ejecutivo con roles RBAC</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Propiedad intelectual 100% transferida</li>
+              </ul>
+            </div>
+            <a href="#calculadora" class="mt-8 block w-full text-center py-3 bg-gradient-to-r from-amber-300 to-amber-400 text-slate-950 rounded-xl text-xs font-bold hover:brightness-110 shadow-lg shadow-amber-500/25">Configurar Estimador</a>
+          </div>
+
+          <!-- Tier 3 -->
+          <div class="glass-panel-elevated rounded-3xl p-8 flex flex-col justify-between">
+            <div class="space-y-4">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-2.5 py-1 rounded-md border border-cyan-500/20">Dirección Estratégica</span>
+              <h3 class="text-2xl font-bold text-white">Ingeniería Financiera</h3>
+              <div class="p-4 rounded-xl bg-black/40 border border-white/5">
+                <span class="text-[10px] text-slate-400 uppercase">Inversión base inicial:</span>
+                <div class="text-3xl font-extrabold text-white font-mono" id="price-tier-3">$2,400 USD</div>
+                <span class="text-[11px] text-slate-500">por dictamen y modelado</span>
+              </div>
+              <ul class="text-xs text-slate-300 space-y-2">
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Modelado DCF y estrés de mercado</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Optimización de estructura de costos</li>
+                <li class="flex items-center gap-2"><i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i> Acompañamiento CFO Advisory</li>
+              </ul>
+            </div>
+            <a href="#calculadora" class="mt-8 block w-full text-center py-3 bg-white/10 hover:bg-white/15 text-white rounded-xl text-xs font-bold transition-all border border-white/10">Configurar Estimador</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project Estimation Calculator Widget -->
+    <section id="calculadora" class="py-20 border-t border-white/5">
+      <div class="max-w-4xl mx-auto px-6">
+        <div class="text-center mb-12 space-y-2">
+          <span class="text-xs font-semibold tracking-wider uppercase text-amber-400">Estimación Inmediata</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Calculadora de Estimación de Proyectos</h2>
+          <p class="text-sm text-slate-400">Seleccione los parámetros de su requerimiento para obtener un estimado presupuestario y de cronograma al instante.</p>
+        </div>
+
+        <div class="glass-panel-elevated rounded-3xl p-8 sm:p-10 space-y-8">
+          <!-- 1. Tipo de Solución -->
+          <div class="space-y-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300">1. Tipo de Solución:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="setCalcOption('solution', 'automation')" id="opt-sol-automation" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Automatización IA</div>
+                <div class="text-[11px] text-slate-400">RPA y flujos continuos</div>
+              </button>
+              <button onclick="setCalcOption('solution', 'software')" id="opt-sol-software" class="calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all">
+                <div class="font-bold text-sm text-amber-300">Desarrollo Software</div>
+                <div class="text-[11px] text-slate-400">Plataformas y portales</div>
+              </button>
+              <button onclick="setCalcOption('solution', 'consulting')" id="opt-sol-consulting" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Consultoría Financiera</div>
+                <div class="text-[11px] text-slate-400">Estrategia y riesgo</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Alcance / Escala -->
+          <div class="space-y-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300">2. Alcance y Escala de la Organización:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="setCalcOption('scale', 'startup')" id="opt-scale-startup" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Startup</div>
+                <div class="text-[11px] text-slate-400">Fase inicial y MVP</div>
+              </button>
+              <button onclick="setCalcOption('scale', 'pyme')" id="opt-scale-pyme" class="calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all">
+                <div class="font-bold text-sm text-amber-300">PYME Consolidada</div>
+                <div class="text-[11px] text-slate-400">Operaciones en escala</div>
+              </button>
+              <button onclick="setCalcOption('scale', 'enterprise')" id="opt-scale-enterprise" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Corporación Global</div>
+                <div class="text-[11px] text-slate-400">Múltiples unidades / filiales</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3. Tiempo de Entrega Deseado -->
+          <div class="space-y-3">
+            <label class="text-xs font-bold uppercase tracking-wider text-slate-300">3. Tiempo de Entrega Deseado:</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button onclick="setCalcOption('speed', 'standard')" id="opt-speed-standard" class="calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all">
+                <div class="font-bold text-sm text-amber-300">Estándar</div>
+                <div class="text-[11px] text-slate-400">Cadencia habitual</div>
+              </button>
+              <button onclick="setCalcOption('speed', 'priority')" id="opt-speed-priority" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Prioritario</div>
+                <div class="text-[11px] text-slate-400">Aceleración de sprints</div>
+              </button>
+              <button onclick="setCalcOption('speed', 'express')" id="opt-speed-express" class="calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all">
+                <div class="font-bold text-sm text-white">Express / Misión Crítica</div>
+                <div class="text-[11px] text-slate-400">Dedicación exclusiva 24/7</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Result Display -->
+          <div class="p-6 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div>
+              <span class="text-xs text-slate-400 uppercase tracking-wider block">Presupuesto Estimado:</span>
+              <div class="text-4xl font-extrabold text-amber-300 font-mono" id="calc-result-price">$5,880 USD</div>
+              <span class="text-xs text-emerald-400" id="calc-result-time">Tiempo estimado de entrega: 5 semanas</span>
+            </div>
+
+            <a href="#contacto" class="px-6 py-3.5 bg-gradient-to-r from-amber-300 to-amber-400 text-slate-950 font-bold rounded-xl hover:brightness-110 shadow-lg shadow-amber-500/20 text-xs uppercase tracking-wider transition-all">
+              Solicitar Propuesta Formal
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamic Insights & Whitepapers Section (Minimal Glassmorphism Cards) -->
+    <section id="insights" class="py-20 border-t border-white/5 relative">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div class="space-y-2 max-w-2xl">
+            <span class="text-xs font-semibold tracking-wider uppercase text-amber-400">Smith Research & Intelligence Labs</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Informes Técnicos, Whitepapers & Tendencias</h2>
+            <p class="text-sm text-slate-400">Investigación aplicada, benchmarks auditados y modelos analíticos para comités directivos.</p>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-emerald-400 font-mono bg-slate-900/80 px-3 py-1.5 rounded-xl border border-white/10 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Edición Q4 2026 Activa</span>
+          </div>
+        </div>
+
+        <!-- 3 Minimal Glassmorphism Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Card 1 -->
+          <div class="glass-panel-elevated rounded-3xl p-7 flex flex-col justify-between hover:border-amber-400/40 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-md border border-emerald-500/20 font-bold uppercase tracking-wider">Operaciones & RPA</span>
+                <span class="text-slate-400 font-mono">9 min lectura</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors leading-snug">
+                Orquestación de Agentes Autónomos en Procesos ERP: Erradicación del 75% en Cargas Manuales
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Estudio cuantitativo sobre la transición de automatizaciones tipo macro hacia enjambres de agentes con memoria semántica en SAP, Oracle y Odoo.
+              </p>
+              <div class="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase">Impacto Auditado</span>
+                <span class="text-sm font-bold text-emerald-400 font-mono">-75% Horas Manuales</span>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">Dr. Alejandro Smith</span>
+              <a href="#contacto" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                <span>Solicitar Briefing</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-panel-elevated rounded-3xl p-7 flex flex-col justify-between border border-amber-400/40 hover:border-amber-400 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-cyan-400 bg-cyan-500/10 px-2.5 py-0.5 rounded-md border border-cyan-500/20 font-bold uppercase tracking-wider">Fintech & Capital</span>
+                <span class="text-slate-400 font-mono">14 min lectura</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors leading-snug">
+                Modelado Financiero Cuantitativo y Pruebas de Estrés en Mercados Emergentes
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Framework para CFOs con flujos DCF dinámicos y 10,000 iteraciones Monte Carlo frente a volatilidad cambiaria e inflación.
+              </p>
+              <div class="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase">Margen Neto</span>
+                <span class="text-sm font-bold text-amber-300 font-mono">+420 bps Expansión</span>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">Lic. Karim Al-Hadiqa</span>
+              <a href="#contacto" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                <span>Solicitar Briefing</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-panel-elevated rounded-3xl p-7 flex flex-col justify-between hover:border-amber-400/40 transition-all group">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-md border border-blue-500/20 font-bold uppercase tracking-wider">Arquitectura Cloud</span>
+                <span class="text-slate-400 font-mono">11 min lectura</span>
+              </div>
+              <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors leading-snug">
+                Arquitectura Web B2B: Resiliencia Cloud y Micro-Frontends de Alto Desempeño
+              </h3>
+              <p class="text-xs text-slate-300 leading-relaxed">
+                Guía técnica sobre portales distribuidos, caching perimetral y topologías multi-región tolerantes a fallos con latencia sub-450ms.
+              </p>
+              <div class="p-3 rounded-xl bg-black/40 border border-white/5 flex items-center justify-between">
+                <span class="text-[10px] text-slate-400 uppercase">Disponibilidad SLA</span>
+                <span class="text-sm font-bold text-cyan-400 font-mono">99.99% Uptime</span>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-[11px] text-slate-400">Ing. Sofía Valenzuela</span>
+              <a href="#contacto" class="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1">
+                <span>Solicitar Briefing</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Multi-Step Corporate Lead Capture Form -->
+    <section id="contacto" class="py-20 border-t border-white/5">
+      <div class="max-w-3xl mx-auto px-6">
+        <div class="text-center mb-10 space-y-2">
+          <span class="text-xs font-semibold tracking-wider uppercase text-amber-400">Formalización Directa</span>
+          <h2 class="text-3xl font-extrabold text-white">Iniciar Consulta Estratégica</h2>
+          <p class="text-xs text-slate-400">Complete los datos en 3 pasos breves para coordinar una sesión de trabajo ejecutiva.</p>
+        </div>
+
+        <div class="glass-panel-elevated rounded-3xl p-8 space-y-6">
+          <!-- Step Progress Bar -->
+          <div class="flex items-center justify-between border-b border-white/10 pb-5">
+            <div class="flex items-center gap-2" id="step-indicator-1">
+              <span class="w-6 h-6 rounded-full bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center">1</span>
+              <span class="text-xs font-bold text-white">Contacto</span>
+            </div>
+            <div class="flex-1 h-[1px] bg-white/10 mx-4"></div>
+            <div class="flex items-center gap-2 text-slate-500" id="step-indicator-2">
+              <span class="w-6 h-6 rounded-full bg-white/10 text-xs font-bold flex items-center justify-center">2</span>
+              <span class="text-xs">Proyecto</span>
+            </div>
+            <div class="flex-1 h-[1px] bg-white/10 mx-4"></div>
+            <div class="flex items-center gap-2 text-slate-500" id="step-indicator-3">
+              <span class="w-6 h-6 rounded-full bg-white/10 text-xs font-bold flex items-center justify-center">3</span>
+              <span class="text-xs">Preferencia</span>
+            </div>
+          </div>
+
+          <!-- Form Fields Container -->
+          <div id="step-content">
+            <!-- Step 1 Content -->
+            <div id="step-1" class="space-y-4">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Nombre y Apellido *</label>
+                <input type="text" id="lead-name" placeholder="Ej. Carlos Mendoza" class="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-xs focus:border-amber-400 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Email Corporativo *</label>
+                <input type="email" id="lead-email" placeholder="carlos@empresa.com" class="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-xs focus:border-amber-400 focus:outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">WhatsApp / Teléfono Móvil *</label>
+                <input type="tel" id="lead-phone" placeholder="+58 422 027 3766 / 0422 027 3766" class="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-xs focus:border-amber-400 focus:outline-none">
+              </div>
+            </div>
+
+            <!-- Step 2 Content -->
+            <div id="step-2" class="space-y-4 hidden">
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Industria o Sector *</label>
+                <select id="lead-industry" class="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-xs focus:border-amber-400 focus:outline-none">
+                  <option value="fintech">Fintech & Servicios Financieros</option>
+                  <option value="ecommerce">Comercio & Retail B2B/B2C</option>
+                  <option value="logistica">Logística, Cadena de Suministro & ERP</option>
+                  <option value="salud">Salud & Biotech</option>
+                  <option value="realestate">Inmobiliario & PropTech</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Breve Descripción del Objetivo *</label>
+                <textarea id="lead-desc" rows="3" placeholder="Queremos automatizar nuestro proceso de facturación y desarrollar un portal de clientes..." class="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 text-white text-xs focus:border-amber-400 focus:outline-none"></textarea>
+              </div>
+            </div>
+
+            <!-- Step 3 Content -->
+            <div id="step-3" class="space-y-4 hidden">
+              <label class="block text-xs font-medium text-slate-300 mb-1">Canal de Contacto Preferido:</label>
+              <div class="grid grid-cols-3 gap-3">
+                <button type="button" onclick="selectContactPref('meet')" id="pref-meet" class="p-4 rounded-xl border border-amber-400 bg-amber-400/10 text-center">
+                  <i data-lucide="video" class="w-5 h-5 mx-auto mb-1 text-amber-400"></i>
+                  <span class="text-[11px] font-bold text-white block">Reunión Virtual</span>
+                </button>
+                <button type="button" onclick="selectContactPref('whatsapp')" id="pref-whatsapp" class="p-4 rounded-xl border border-white/10 bg-white/5 text-center">
+                  <i data-lucide="message-circle" class="w-5 h-5 mx-auto mb-1 text-emerald-400"></i>
+                  <span class="text-[11px] font-bold text-white block">WhatsApp</span>
+                </button>
+                <button type="button" onclick="selectContactPref('email')" id="pref-email" class="p-4 rounded-xl border border-white/10 bg-white/5 text-center">
+                  <i data-lucide="mail" class="w-5 h-5 mx-auto mb-1 text-cyan-400"></i>
+                  <span class="text-[11px] font-bold text-white block">Correo</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step Navigation Buttons -->
+          <div class="flex items-center justify-between pt-4 border-t border-white/10">
+            <button id="btn-prev-step" onclick="prevStep()" class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-white hidden">
+              Anterior
+            </button>
+            <div class="flex-1"></div>
+            <button id="btn-next-step" onclick="nextStep()" class="px-6 py-2.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-300 to-amber-400 hover:brightness-110 rounded-xl transition-all">
+              Siguiente Paso
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Corporate AI Chat Widget -->
+  <div class="fixed bottom-6 right-6 z-50">
+    <!-- Chat Modal -->
+    <div id="chat-window" class="hidden w-80 sm:w-96 rounded-2xl glass-panel-elevated border border-white/15 shadow-2xl mb-4 overflow-hidden">
+      <!-- Header -->
+      <div class="p-4 bg-slate-900/90 border-b border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="relative">
+            <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-400 font-bold text-xs">
+              AI
+            </div>
+            <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-slate-900"></span>
+          </div>
+          <div>
+            <span class="text-xs font-bold text-white block">Smith Advisor IA</span>
+            <span class="text-[10px] text-emerald-400 block font-medium">Agente Corporativo Activo</span>
+          </div>
+        </div>
+        <button onclick="toggleChat()" class="text-slate-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Messages Area -->
+      <div id="chat-messages" class="p-4 space-y-3 h-64 overflow-y-auto text-xs">
+        <div class="bg-white/5 border border-white/10 p-3 rounded-xl rounded-tl-none max-w-[85%] text-slate-200">
+          Hola. Soy el asistente virtual ejecutivo de Smith Business Solutions. ¿En qué podemos orientar su proyecto hoy?
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="px-4 py-2 border-t border-white/10 flex flex-wrap gap-1.5 bg-black/40">
+        <button onclick="sendQuickReply('Ver Servicios')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-amber-300 border border-white/5">Ver Servicios</button>
+        <button onclick="sendQuickReply('Solicitar Cotización')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-emerald-300 border border-white/5">Solicitar Cotización</button>
+        <button onclick="sendQuickReply('Hablar con un Asesor')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] text-cyan-300 border border-white/5">Hablar con un Asesor</button>
+      </div>
+
+      <!-- Input Field -->
+      <div class="p-3 border-t border-white/10 bg-slate-900 flex items-center gap-2">
+        <input type="text" id="chat-input" placeholder="Escriba su consulta..." class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400" onkeydown="if(event.key==='Enter') sendMessage()">
+        <button onclick="sendMessage()" class="p-2 rounded-xl bg-amber-400 text-slate-950 font-bold hover:brightness-110">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button onclick="toggleChat()" class="w-14 h-14 rounded-full bg-gradient-to-r from-amber-400 to-amber-300 text-slate-950 shadow-xl shadow-amber-500/25 flex items-center justify-center hover:scale-105 active:scale-95 transition-transform">
+      <i data-lucide="message-square" class="w-6 h-6"></i>
+    </button>
+  </div>
+
+  <!-- Vanilla Scripts -->
+  <script>
+    // 1. Initialize Lucide Icons
+    lucide.createIcons();
+
+    // 2. Three.js Holographic Boardroom & Sostana Core AI Setup
+    (function initThreeBackground() {
+      const container = document.getElementById('three-bg-canvas');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x020611, 0.0035);
+
+      const camera = new THREE.PerspectiveCamera(42, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 14, 48);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // A. Boardroom Table
+      const deskGroup = new THREE.Group();
+      scene.add(deskGroup);
+
+      const deskGeo = new THREE.BoxGeometry(46, 2.8, 22);
+      const deskMat = new THREE.MeshStandardMaterial({ color: 0x090d16, roughness: 0.25, metalness: 0.85 });
+      const deskMesh = new THREE.Mesh(deskGeo, deskMat);
+      deskMesh.position.set(0, -1.4, 6);
+      deskGroup.add(deskMesh);
+
+      // Plaque: "SMITH BUSINESS SOLUTIONS / AL HADIQA INVEST / SOSTANA CORE AI"
+      const plaqueCanvas = document.createElement('canvas');
+      plaqueCanvas.width = 512;
+      plaqueCanvas.height = 128;
+      const pctx = plaqueCanvas.getContext('2d');
+      pctx.fillStyle = '#64748b';
+      pctx.fillRect(0, 0, 512, 128);
+      pctx.fillStyle = '#0f172a';
+      pctx.textAlign = 'center';
+      pctx.font = 'bold 22px sans-serif';
+      pctx.fillText('SMITH BUSINESS SOLUTIONS', 256, 40);
+      pctx.font = 'bold 16px monospace';
+      pctx.fillText('AL HADIQA INVEST · SOSTANA CORE AI', 256, 75);
+      const plaqueTex = new THREE.CanvasTexture(plaqueCanvas);
+      const plaqueMesh = new THREE.Mesh(new THREE.PlaneGeometry(14, 3.5), new THREE.MeshBasicMaterial({ map: plaqueTex }));
+      plaqueMesh.position.set(0, -1.4, 17.1);
+      deskGroup.add(plaqueMesh);
+
+      // B. Pedestal Ring
+      const pedestalGroup = new THREE.Group();
+      pedestalGroup.position.set(0, 0.05, 5);
+      scene.add(pedestalGroup);
+
+      const ringGeo = new THREE.RingGeometry(7.5, 8.2, 64);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.rotation.x = -Math.PI / 2;
+      pedestalGroup.add(ringMesh);
+
+      // C. Procedural Sostana Holographic Avatar
+      const avatarGroup = new THREE.Group();
+      avatarGroup.position.set(0, 0, 5);
+      scene.add(avatarGroup);
+
+      const holoMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.55
+      });
+
+      // Head with bob hairstyle
+      const head = new THREE.Mesh(new THREE.SphereGeometry(1.05, 24, 24), holoMat);
+      head.scale.set(1.0, 1.25, 1.05);
+      head.position.set(0, 20.8, 0);
+      avatarGroup.add(head);
+
+      const hair = new THREE.Mesh(new THREE.SphereGeometry(1.3, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.65), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.6 }));
+      hair.position.set(0, 21.2, -0.1);
+      avatarGroup.add(hair);
+
+      // Torso & Hips
+      const torso = new THREE.Mesh(new THREE.CylinderGeometry(1.65, 1.2, 5.2, 24), holoMat);
+      torso.position.set(0, 16.0, 0);
+      avatarGroup.add(torso);
+
+      const hips = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.5, 2.5, 24), holoMat);
+      hips.position.set(0, 12.5, 0);
+      avatarGroup.add(hips);
+
+      // Limbs
+      const legL = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.45, 11, 20), holoMat);
+      legL.position.set(-1.1, 6.0, 0.2);
+      const legR = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.45, 11, 20), holoMat);
+      legR.position.set(1.1, 6.0, 0.2);
+      avatarGroup.add(legL, legR);
+
+      const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.3, 8.5, 16), holoMat);
+      armL.position.set(-2.4, 14.5, 0);
+      const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.3, 8.5, 16), holoMat);
+      armR.position.set(2.4, 14.5, 0);
+      avatarGroup.add(armL, armR);
+
+      // D. Floating HUD Panels
+      const hudMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.45, side: THREE.DoubleSide });
+      const hud1 = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.8), hudMat);
+      hud1.position.set(-9.0, 16.0, 5.5);
+      hud1.rotation.y = 0.25;
+
+      const hud2 = new THREE.Mesh(new THREE.PlaneGeometry(7.5, 4.8), hudMat);
+      hud2.position.set(9.0, 16.0, 5.5);
+      hud2.rotation.y = -0.25;
+      scene.add(hud1, hud2);
+
+      // Lighting
+      const light = new THREE.PointLight(0x00f0ff, 3.0, 40);
+      light.position.set(0, 14, 5);
+      scene.add(light, new THREE.AmbientLight(0x061122, 0.8));
+
+      // Mouse Parallax & Animation
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.00045;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.00045;
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      let clock = new THREE.Clock();
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+        camera.position.x += (mouseX * 30 - camera.position.x) * 0.05;
+        camera.position.y += (14 - mouseY * 15 - camera.position.y) * 0.05;
+        camera.lookAt(0, 11, 5);
+
+        ringMesh.rotation.z = t * 0.15;
+        avatarGroup.position.y = Math.sin(t * 1.5) * 0.15;
+        hud1.position.y = 16.0 + Math.sin(t * 1.8) * 0.2;
+        hud2.position.y = 16.0 + Math.sin(t * 1.8 + 1.0) * 0.2;
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    })();
+
+    // 3. Spotlight Hover Cursor Tracking
+    const spotlightCards = document.querySelectorAll('.spotlight-card');
+    spotlightCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+        card.style.setProperty('--spotlight-opacity', '1');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--spotlight-opacity', '0');
+      });
+    });
+
+    // 4. Currency Switcher Logic (USD / EUR)
+    let currentCurrency = 'USD';
+    const eurRate = 0.92;
+    function setCurrency(curr) {
+      currentCurrency = curr;
+      const btnUsd = document.getElementById('btn-currency-usd');
+      const btnEur = document.getElementById('btn-currency-eur');
+      if (curr === 'USD') {
+        btnUsd.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 text-slate-950 shadow-md';
+        btnEur.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white';
+        document.getElementById('price-tier-1').innerText = '$1,800 USD';
+        document.getElementById('price-tier-2').innerText = '$3,200 USD';
+        document.getElementById('price-tier-3').innerText = '$2,400 USD';
+      } else {
+        btnEur.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-400 text-slate-950 shadow-md';
+        btnUsd.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white';
+        document.getElementById('price-tier-1').innerText = '€1,656 EUR';
+        document.getElementById('price-tier-2').innerText = '€2,944 EUR';
+        document.getElementById('price-tier-3').innerText = '€2,208 EUR';
+      }
+      recalculate();
+    }
+
+    // 5. Project Estimation Calculator Logic
+    let calcState = {
+      solution: 'software',
+      scale: 'pyme',
+      speed: 'standard'
+    };
+
+    const solutionBases = { automation: 2800, software: 4200, consulting: 3400 };
+    const scaleMult = { startup: 0.8, pyme: 1.4, enterprise: 2.2 };
+    const speedMult = { standard: 1.0, priority: 1.25, express: 1.5 };
+    const speedWeeks = { standard: 5, priority: 3, express: 2 };
+
+    function setCalcOption(category, value) {
+      calcState[category] = value;
+      // update active button styles
+      ['automation', 'software', 'consulting'].forEach(v => {
+        const el = document.getElementById(`opt-sol-${v}`);
+        if (!el) return;
+        if (v === calcState.solution) {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all';
+          el.children[0].className = 'font-bold text-sm text-amber-300';
+        } else {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all';
+          el.children[0].className = 'font-bold text-sm text-white';
+        }
+      });
+
+      ['startup', 'pyme', 'enterprise'].forEach(v => {
+        const el = document.getElementById(`opt-scale-${v}`);
+        if (!el) return;
+        if (v === calcState.scale) {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all';
+          el.children[0].className = 'font-bold text-sm text-amber-300';
+        } else {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all';
+          el.children[0].className = 'font-bold text-sm text-white';
+        }
+      });
+
+      ['standard', 'priority', 'express'].forEach(v => {
+        const el = document.getElementById(`opt-speed-${v}`);
+        if (!el) return;
+        if (v === calcState.speed) {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-amber-400 bg-amber-400/10 transition-all';
+          el.children[0].className = 'font-bold text-sm text-amber-300';
+        } else {
+          el.className = 'calc-btn text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:border-amber-400/40 transition-all';
+          el.children[0].className = 'font-bold text-sm text-white';
+        }
+      });
+
+      recalculate();
+    }
+
+    function recalculate() {
+      const base = solutionBases[calcState.solution];
+      const totalUSD = Math.round(base * scaleMult[calcState.scale] * speedMult[calcState.speed]);
+      const weeks = speedWeeks[calcState.speed];
+
+      const priceEl = document.getElementById('calc-result-price');
+      const timeEl = document.getElementById('calc-result-time');
+
+      if (currentCurrency === 'EUR') {
+        const eur = Math.round(totalUSD * eurRate);
+        priceEl.innerText = `€${eur.toLocaleString()} EUR`;
+      } else {
+        priceEl.innerText = `$${totalUSD.toLocaleString()} USD`;
+      }
+      timeEl.innerText = `Tiempo estimado de entrega: ${weeks} semanas`;
+    }
+
+    // 6. Multi-Step Form Logic
+    let currentStep = 1;
+    function nextStep() {
+      if (currentStep === 1) {
+        const name = document.getElementById('lead-name').value;
+        const email = document.getElementById('lead-email').value;
+        if (!name || !email) {
+          alert('Por favor complete su nombre y correo corporativo.');
+          return;
+        }
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('btn-prev-step').classList.remove('hidden');
+        document.getElementById('step-indicator-2').className = 'flex items-center gap-2 text-white font-bold';
+        document.getElementById('step-indicator-2').children[0].className = 'w-6 h-6 rounded-full bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center';
+        currentStep = 2;
+      } else if (currentStep === 2) {
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-3').classList.remove('hidden');
+        document.getElementById('btn-next-step').innerText = 'Enviar Requerimiento';
+        document.getElementById('step-indicator-3').className = 'flex items-center gap-2 text-white font-bold';
+        document.getElementById('step-indicator-3').children[0].className = 'w-6 h-6 rounded-full bg-amber-400 text-slate-950 text-xs font-bold flex items-center justify-center';
+        currentStep = 3;
+      } else {
+        alert('¡Solicitud formal registrada con éxito! Nuestro equipo directivo se pondrá en contacto.');
+      }
+    }
+
+    function prevStep() {
+      if (currentStep === 2) {
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-1').classList.remove('hidden');
+        document.getElementById('btn-prev-step').classList.add('hidden');
+        document.getElementById('step-indicator-2').className = 'flex items-center gap-2 text-slate-500';
+        document.getElementById('step-indicator-2').children[0].className = 'w-6 h-6 rounded-full bg-white/10 text-xs font-bold flex items-center justify-center';
+        currentStep = 1;
+      } else if (currentStep === 3) {
+        document.getElementById('step-3').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('btn-next-step').innerText = 'Siguiente Paso';
+        document.getElementById('step-indicator-3').className = 'flex items-center gap-2 text-slate-500';
+        document.getElementById('step-indicator-3').children[0].className = 'w-6 h-6 rounded-full bg-white/10 text-xs font-bold flex items-center justify-center';
+        currentStep = 2;
+      }
+    }
+
+    let selectedPref = 'meet';
+    function selectContactPref(pref) {
+      selectedPref = pref;
+      ['meet', 'whatsapp', 'email'].forEach(p => {
+        const el = document.getElementById(`pref-${p}`);
+        if (p === pref) {
+          el.className = 'p-4 rounded-xl border border-amber-400 bg-amber-400/10 text-center';
+        } else {
+          el.className = 'p-4 rounded-xl border border-white/10 bg-white/5 text-center';
+        }
+      });
+    }
+
+    // 7. Floating Chat Widget Logic
+    function toggleChat() {
+      const win = document.getElementById('chat-window');
+      win.classList.toggle('hidden');
+    }
+
+    function sendQuickReply(text) {
+      addMessage(text, 'user');
+      setTimeout(() => {
+        if (text === 'Ver Servicios') {
+          addMessage('Ofrecemos Automatización con IA, Desarrollo de Plataformas Web y Consultoría Financiera. ¿Cuál se adapta a sus objetivos?', 'bot');
+        } else if (text === 'Solicitar Cotización') {
+          addMessage('Puede usar la calculadora interactiva arriba o dejarnos sus datos en el formulario para enviarle un presupuesto formal.', 'bot');
+        } else {
+          addMessage('Perfecto. Un socio director de Smith Business Solutions se comunicará por WhatsApp al 0422 027 3766 (+58 422 027 3766) o por videollamada.', 'bot');
+        }
+      }, 600);
+    }
+
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const val = input.value.trim();
+      if (!val) return;
+      addMessage(val, 'user');
+      input.value = '';
+      setTimeout(() => {
+        addMessage('Gracias por su mensaje. Hemos registrado su consulta técnica y un asesor corporativo la responderá en breve.', 'bot');
+      }, 700);
+    }
+
+    function addMessage(text, sender) {
+      const container = document.getElementById('chat-messages');
+      const msg = document.createElement('div');
+      if (sender === 'user') {
+        msg.className = 'bg-amber-400/20 border border-amber-400/40 p-3 rounded-xl rounded-tr-none max-w-[85%] ml-auto text-amber-200';
+      } else {
+        msg.className = 'bg-white/5 border border-white/10 p-3 rounded-xl rounded-tl-none max-w-[85%] text-slate-200';
+      }
+      msg.innerText = text;
+      container.appendChild(msg);
+      container.scrollTop = container.scrollHeight;
+    }
+  </script>
+</body>
+</html>

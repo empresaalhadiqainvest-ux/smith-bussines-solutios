@@ -1,0 +1,288 @@
+import { WhitepaperItem } from '../types';
+
+export const initialWhitepapers: WhitepaperItem[] = [
+  {
+    id: 'wp-ai-agents-erp-2026',
+    title: 'Orquestación de Agentes Autónomos en Procesos ERP: Erradicación del 75% en Cargas Manuales',
+    slug: 'orquestacion-agentes-autonomos-erp',
+    category: 'operations',
+    categoryLabel: 'Operaciones & RPA con IA',
+    publishDate: 'Noviembre 2026',
+    readTime: '9 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Informe Técnico',
+    fileSize: '4.2 MB',
+    downloadCount: 1420,
+    featured: true,
+    executiveSummary:
+      'Un estudio exhaustivo de campo sobre la transición de automatizaciones lineales tipo macro hacia enjambres de agentes autónomos con memoria semántica e interfaces API bidireccionales en sistemas SAP, Oracle y Odoo.',
+    keyFindings: [
+      'Reducción sostenida del 75% en horas-hombre destinadas a la conciliación de extractos y facturas multiproveedor.',
+      'Disminución del error humano del 4.8% a menos del 0.02% con validaciones heurísticas previas al libro mayor.',
+      'Período de amortización del despliegue (Payback Period) inferior a 3.4 meses en corporaciones con más de 150 empleados.',
+    ],
+    metrics: [
+      { label: 'Reducción de Tiempo', value: '-75%' },
+      { label: 'Precisión Contable', value: '99.98%' },
+      { label: 'Payback Auditado', value: '3.4 meses' },
+    ],
+    author: {
+      name: 'Dr. Alejandro Smith',
+      role: 'Chief Technology Officer · Al-Hadiqa Invest',
+      avatar: 'AS',
+    },
+    tags: ['Agentes Autónomos', 'ERP Automation', 'RPA', 'n8n Enterprise', 'SAP Integration'],
+    tableOfContents: [
+      '1. El fin del RPA estático y la llegada de agentes deliberativos',
+      '2. Arquitectura de integración segura con ERPs legacy',
+      '3. Protocolos de auditoría y barandillas de seguridad (Guardrails)',
+      '4. Caso práctico: Implementación en holding multisectorial',
+      '5. Conclusiones y hoja de ruta tecnológica 2027',
+    ],
+    fullSections: [
+      {
+        heading: '1. El fin del RPA estático y la llegada de agentes deliberativos',
+        body: 'Durante la última década, las herramientas de automatización robótica de procesos (RPA) tradicionales han dependido de flujos rígidos y selectores frágiles en pantallas de usuario. Smith Business Solutions documenta en este informe el salto cualitativo hacia arquitecturas de agentes autónomos impulsados por modelos de lenguaje adaptados, capaces de razonar sobre discrepancias documentales en tiempo real.',
+        takeaway: 'Los agentes autónomos no solo ejecutan tareas predefinidas; toman decisiones operativas contextuales dentro de rangos paramétricos supervisados.',
+      },
+      {
+        heading: '2. Arquitectura de integración segura con ERPs legacy',
+        body: 'El principal desafío en corporaciones consolidadas radica en interactuar con sistemas centrales sin comprometer la integridad transaccional. Nuestra metodología implementa capas intermedias de staging con colas de mensajes Kafka y microservicios protegidos mediante autenticación mTLS y control de acceso basado en roles (RBAC).',
+        takeaway: 'Aislar las transacciones en una zona de contención previa garantiza cero interrupciones en el ERP productivo.',
+      },
+      {
+        heading: '3. Resultados empíricos y retorno financiero',
+        body: 'El análisis de métricas en 12 corporaciones del portafolio demostró un ahorro medio anual de 184,000 USD en costos de recaptura de información y prevención de recargos por mora en facturación de proveedores.',
+        takeaway: 'La automatización de procesos críticos no es solo un recorte de costos, sino un multiplicador del flujo de caja operativo.',
+      },
+    ],
+  },
+  {
+    id: 'wp-cloud-microfrontends-2026',
+    title: 'Arquitectura de Sistemas Web B2B: Resiliencia Cloud y Micro-Frontends de Alto Desempeño',
+    slug: 'arquitectura-sistemas-web-b2b-cloud',
+    category: 'architecture',
+    categoryLabel: 'Arquitectura Empresarial',
+    publishDate: 'Octubre 2026',
+    readTime: '11 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Blueprint',
+    fileSize: '5.8 MB',
+    downloadCount: 980,
+    featured: false,
+    executiveSummary:
+      'Guía arquitectónica para Directores de Ingeniería sobre el diseño de portales corporativos distribuidos, sincronización de estado sin lag en navegadores modernos y topologías multi-región tolerantes a fallos.',
+    keyFindings: [
+      'Tiempos de interacción (Time-to-Interactive) reducidos a menos de 450ms a escala intercontinental.',
+      'Aislamiento de módulos de checkout y administración que garantiza 99.99% de uptime incluso ante caídas parciales.',
+      'Despliegues atómicos sin fricción mediante contenedores inmutables en Cloud Run y Kubernetes.',
+    ],
+    metrics: [
+      { label: 'Uptime Global', value: '99.99%' },
+      { label: 'TTI Promedio', value: '420ms' },
+      { label: 'Ahorro Cloud Infra', value: '-38%' },
+    ],
+    author: {
+      name: 'Ing. Sofía Valenzuela',
+      role: 'Principal Cloud Architect',
+      avatar: 'SV',
+    },
+    tags: ['Cloud Architecture', 'React 19', 'Micro-Frontends', 'Distributed Systems', 'Edge Networks'],
+    tableOfContents: [
+      '1. Síntomas de degradación en arquitecturas web monolíticas',
+      '2. Desacoplamiento modular mediante Module Federation y ESM',
+      '3. Estrategias de caching perimetral y optimización WebGL',
+      '4. Benchmark de rendimiento frente a frameworks tradicionales',
+    ],
+    fullSections: [
+      {
+        heading: '1. Síntomas de degradación en arquitecturas web monolíticas',
+        body: 'A medida que las aplicaciones empresariales integran más funcionalidades de negocio, las suites de frontend monolíticas sufren bloqueos del hilo principal, bundling inflado y tiempos de carga inaceptables para clientes corporativos de alto nivel.',
+        takeaway: 'El rendimiento del frontend tiene impacto directo comprobado en tasas de conversión B2B superiores a 1M USD anuales.',
+      },
+      {
+        heading: '2. Enfoque modular y edge delivery',
+        body: 'Nuestra arquitectura desglosa las interfaces en micro-aplicaciones aisladas servidas desde nodos perimetrales con latencia sub-20ms, permitiendo actualizaciones continuas sin reiniciar sesiones de usuario activas.',
+        takeaway: 'La resiliencia operativa depende de que ningún fallo puntual en un componente degrade la experiencia global.',
+      },
+    ],
+  },
+  {
+    id: 'wp-fintech-dcf-stress-2026',
+    title: 'Modelado Financiero Cuantitativo y Pruebas de Estrés en Mercados Emergentes',
+    slug: 'modelado-financiero-dcf-stress-testing',
+    category: 'fintech',
+    categoryLabel: 'Fintech & Capital Estratégico',
+    publishDate: 'Octubre 2026',
+    readTime: '14 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Modelo Excel Incluido',
+    fileSize: '6.1 MB',
+    downloadCount: 1650,
+    featured: true,
+    executiveSummary:
+      'Metodología para CFOs y Comités de Inversión para estructurar flujos de caja descontados (DCF) dinámicos que incorporan simulación Monte Carlo frente a fluctuaciones de divisas, tasas de interés y shocks de suministros.',
+    keyFindings: [
+      'Identificación temprana del 82% de las brechas de liquidez con 6 meses de anticipación al balance trimestral.',
+      'Alineación del WACC adaptativo que protege el valor patrimonial de holdings con filiales internacionales.',
+      'Optimización de la estructura de deuda que expandió el margen neto en un promedio de 420 puntos básicos.',
+    ],
+    metrics: [
+      { label: 'Precisión de Pronóstico', value: '94.6%' },
+      { label: 'Expansión de Margen', value: '+420 bps' },
+      { label: 'Simulaciones Monte Carlo', value: '10,000 iter' },
+    ],
+    author: {
+      name: 'Lic. Karim Al-Hadiqa',
+      role: 'Managing Partner · Corporate Finance',
+      avatar: 'KA',
+    },
+    tags: ['Valuation DCF', 'Monte Carlo', 'CFO Advisory', 'Gestión de Riesgo', 'EBITDA Optimization'],
+    tableOfContents: [
+      '1. Vulnerabilidades del modelado financiero estático',
+      '2. Simulación estocástica aplicada a precios de insumos',
+      '3. Reestructuración de capital de trabajo y ciclo de conversión de caja',
+      '4. Protocolo de toma de decisiones para juntas directivas',
+    ],
+    fullSections: [
+      {
+        heading: '1. Vulnerabilidades del modelado financiero estático',
+        body: 'Los modelos de proyección tradicionales basados en una única tasa de crecimiento lineal resultan ineficaces en economías dinámicas. El documento presenta un framework que ejecuta 10,000 iteraciones estocásticas para determinar la probabilidad de insolvencia.',
+        takeaway: 'Los planes de contingencia financieros deben estar activados previamente según bandas de sensibilidad preestablecidas.',
+      },
+      {
+        heading: '2. Estrategia de capital de trabajo y protección de liquidez',
+        body: 'Demostramos cómo la sincronización del ciclo operativo reduce la necesidad de líneas de crédito de emergencia a tasas de interés punitivas, mejorando la calificación de riesgo crediticio corporativo.',
+        takeaway: 'La liquidez es el activo más escaso en momentos de estrés macroeconómico.',
+      },
+    ],
+  },
+  {
+    id: 'wp-ai-governance-owasp-2026',
+    title: 'Gobernanza de Inteligencia Artificial y Seguridad Corporativa: Mitigación OWASP Top 10 para LLMs',
+    slug: 'gobernanza-ia-seguridad-owasp-llm',
+    category: 'ai',
+    categoryLabel: 'Inteligencia Artificial',
+    publishDate: 'Septiembre 2026',
+    readTime: '8 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Checklist de Cumplimiento',
+    fileSize: '3.9 MB',
+    downloadCount: 1120,
+    featured: false,
+    executiveSummary:
+      'Protocolos de sanitización de prompts, aislamiento de datos confidenciales y enrutamiento seguro de inferencias para evitar fugas de propiedad intelectual en aplicaciones empresariales asistidas por IA.',
+    keyFindings: [
+      'Detección y bloqueo del 100% de intentos de inyección indirecta de prompts en pipelines de documentos corporativos.',
+      'Arquitectura de tokenización privada que garantiza que ningún dato de clientes sea utilizado para reentrenamiento.',
+      'Auditoría continua de sesgo y alucinaciones con umbral de confiabilidad certificado del 99.7%.',
+    ],
+    metrics: [
+      { label: 'Bloqueo Prompt Injection', value: '100%' },
+      { label: 'Zero-Retention SLAs', value: '100% compliant' },
+      { label: 'Confiabilidad Certificada', value: '99.7%' },
+    ],
+    author: {
+      name: 'Dr. Alejandro Smith',
+      role: 'Chief Technology Officer · Al-Hadiqa Invest',
+      avatar: 'AS',
+    },
+    tags: ['AI Security', 'OWASP LLM', 'Data Governance', 'Zero Trust', 'Enterprise Privacy'],
+    tableOfContents: [
+      '1. El vector de riesgo de la IA generativa sin supervisión',
+      '2. Sanitización estricta y barreras semánticas (Semantic Firewalls)',
+      '3. Contratos de nivel de servicio con proveedores de modelos',
+      '4. Checklist de verificación para Directores de Seguridad (CISO)',
+    ],
+    fullSections: [
+      {
+        heading: '1. El vector de riesgo de la IA generativa sin supervisión',
+        body: 'El uso descontrolado de herramientas públicas de IA expone a las organizaciones a filtraciones de patentes, estados financieros no auditados y datos identificables de clientes. Este documento establece las políticas corporativas mínimas indispensables.',
+        takeaway: 'La innovación con IA requiere muros de contención técnica tan rigurosos como los de infraestructura financiera.',
+      },
+    ],
+  },
+  {
+    id: 'wp-crossborder-fintech-2026',
+    title: 'Liquidación Instantánea y Pagos B2B Transfronterizos: Ahorro del 68% en Comisiones SWIFT',
+    slug: 'pagos-b2b-transfronterizos-liquidacion',
+    category: 'fintech',
+    categoryLabel: 'Fintech & Capital Estratégico',
+    publishDate: 'Agosto 2026',
+    readTime: '10 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Caso de Estudio',
+    fileSize: '4.7 MB',
+    downloadCount: 840,
+    featured: false,
+    executiveSummary:
+      'Análisis comparativo de rieles de pago alternativos para empresas exportadoras e importadoras en Latinoamérica, Europa y Oriente Medio, reduciendo tiempos de clearing de días a minutos.',
+    keyFindings: [
+      'Reducción de costos de intermediación bancaria del 3.5% al 0.8% por transferencia internacional de capital.',
+      'Eliminación de la incertidumbre cambiaria gracias a contratos de cobertura algorítmica intradiarios.',
+      'Trazabilidad auditada en tiempo real bajo estándares ISO 20022.',
+    ],
+    metrics: [
+      { label: 'Comisión Media', value: '0.8%' },
+      { label: 'Velocidad de Clearing', value: '< 15 min' },
+      { label: 'Cumplimiento', value: 'ISO 20022' },
+    ],
+    author: {
+      name: 'Lic. Karim Al-Hadiqa',
+      role: 'Managing Partner · Corporate Finance',
+      avatar: 'KA',
+    },
+    tags: ['Cross-Border Payments', 'Fintech B2B', 'ISO 20022', 'Treasury Management', 'FX Hedging'],
+    tableOfContents: [
+      '1. Anatomía de los costos ocultos en corresponsalías bancarias',
+      '2. Rieles de pago modernos y APIs de compensación directa',
+      '3. Cobertura de riesgo cambiario automatizada en la tesorería',
+    ],
+    fullSections: [
+      {
+        heading: '1. Anatomía de los costos ocultos en transferencias internacionales',
+        body: 'Las comisiones por giros bancarios tradicionales y los márgenes cambiarios asimétricos erosionan significativamente el margen bruto de importadores y exportadores. El informe detalla cómo renegociar y conectar gateways directos de alta escala.',
+        takeaway: 'La tesorería global moderna opera con liquidación en tiempo real y spreads transparentes.',
+      },
+    ],
+  },
+  {
+    id: 'wp-cloud-serverless-resilience-2026',
+    title: 'Modernización de Infraestructuras Legacy: De Monolitos a Clusters Serverless de Cero Downtime',
+    slug: 'modernizacion-infraestructura-serverless-cero-downtime',
+    category: 'architecture',
+    categoryLabel: 'Arquitectura Empresarial',
+    publishDate: 'Julio 2026',
+    readTime: '12 min de lectura',
+    fileFormat: 'PDF Ejecutivo · Playbook',
+    fileSize: '5.1 MB',
+    downloadCount: 1290,
+    featured: false,
+    executiveSummary:
+      'Estrategia paso a paso conocida como Strangler Fig Pattern para reemplazar núcleos informáticos vetustos sin paralizar las operaciones de facturación ni la atención al cliente.',
+    keyFindings: [
+      'Cero interrupciones de servicio durante 18 meses continuos de migración progresiva de datos.',
+      'Disminución del 62% en costos fijos de servidores físicos mediante escalabilidad a cero bajo demanda.',
+      'Aceleración del ciclo de lanzamiento de nuevas funcionalidades de meses a semanas.',
+    ],
+    metrics: [
+      { label: 'Downtime en Migración', value: '0.00 seg' },
+      { label: 'Reducción OPEX Servidores', value: '-62%' },
+      { label: 'Velocidad de Release', value: '4x más rápido' },
+    ],
+    author: {
+      name: 'Ing. Sofía Valenzuela',
+      role: 'Principal Cloud Architect',
+      avatar: 'SV',
+    },
+    tags: ['Serverless', 'Strangler Pattern', 'Cloud Migration', 'DevOps', 'Cost Optimization'],
+    tableOfContents: [
+      '1. El peligro de las migraciones Big Bang',
+      '2. Implementación del Strangler Fig Pattern con API Gateways',
+      '3. Replicación bidireccional y consistencia eventual de bases de datos',
+      '4. Plan de contingencia y rollback automatizado',
+    ],
+    fullSections: [
+      {
+        heading: '1. El peligro de las migraciones Big Bang',
+        body: 'Intentar migrar sistemas centrales de una sola vez conlleva riesgos catastróficos de pérdida de datos y descontento de usuarios. Nuestro playbook desglosa el cambio funcional por vertical de negocio sin tocar la base productiva de manera abrupta.',
+        takeaway: 'La modernización exitosa es una transformación quirúrgica continua, nunca un salto al vacío.',
+      },
+    ],
+  },
+];
