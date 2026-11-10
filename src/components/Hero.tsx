@@ -6,12 +6,16 @@ interface HeroProps {
   onScrollToCalculator: () => void;
   onScrollToServices: () => void;
   onOpenHologram?: () => void;
+  isExplorationView?: boolean;
+  onToggleExplorationView?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({
   onScrollToCalculator,
   onScrollToServices,
   onOpenHologram,
+  isExplorationView,
+  onToggleExplorationView,
 }) => {
   const [heroViewMode, setHeroViewMode] = useState<'3d' | 'photo'>('3d');
   return (
@@ -73,12 +77,17 @@ export const Hero: React.FC<HeroProps> = ({
               </button>
 
               <button
-                onClick={onOpenHologram}
+                onClick={onToggleExplorationView}
                 type="button"
-                className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3.5 text-sm font-semibold text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 rounded-xl border border-cyan-400/40 shadow-lg shadow-cyan-500/10 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-center"
+                className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-3.5 text-sm font-semibold rounded-xl border transition-all cursor-pointer text-center ${
+                  isExplorationView
+                    ? 'bg-gradient-to-r from-cyan-400 to-cyan-300 text-slate-950 border-cyan-200 shadow-lg shadow-cyan-400/30 font-bold'
+                    : 'text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border-cyan-400/40 shadow-lg shadow-cyan-500/10'
+                }`}
+                title="Alternar entre Vista General y Vista de Exploración con zoom interactivo sobre el modelo 3D"
               >
-                <Eye className="w-4 h-4 text-cyan-400" />
-                <span>Holograma Sostana 3D</span>
+                <Eye className="w-4 h-4" />
+                <span>{isExplorationView ? 'Vista de Exploración (Activa)' : 'Vista de Exploración (Zoom 3D)'}</span>
               </button>
 
               <button
@@ -138,14 +147,32 @@ export const Hero: React.FC<HeroProps> = ({
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={onOpenHologram}
-                className="text-xs text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
-              >
-                <span>Explorar Sala 3D</span>
-                <Maximize2 className="w-3.5 h-3.5" />
-              </button>
+              <div className="flex items-center gap-2">
+                {onToggleExplorationView && (
+                  <button
+                    type="button"
+                    onClick={onToggleExplorationView}
+                    className={`text-xs font-semibold px-2.5 py-1 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
+                      isExplorationView
+                        ? 'bg-cyan-400 text-slate-950 border-cyan-300 font-bold shadow-sm'
+                        : 'text-cyan-300 bg-cyan-950/40 hover:bg-cyan-900/60 border-cyan-400/30'
+                    }`}
+                    title="Alternar vista del fondo con zoom interactivo sobre el avatar 3D"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>{isExplorationView ? 'Zoom Activo' : 'Zoom 3D Fondo'}</span>
+                  </button>
+                )}
+
+                <button
+                  type="button"
+                  onClick={onOpenHologram}
+                  className="text-xs text-amber-300 hover:text-amber-200 font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                >
+                  <span>Explorar Sala 3D</span>
+                  <Maximize2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
             <div className="relative rounded-2xl p-1.5 bg-gradient-to-b from-cyan-400/30 via-white/10 to-transparent shadow-2xl shadow-cyan-500/10">

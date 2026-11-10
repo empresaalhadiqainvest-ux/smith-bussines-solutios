@@ -22,11 +22,15 @@ import {
 interface ThreeBackgroundProps {
   interactiveMode?: boolean;
   onToggleInteractive?: () => void;
+  explorationMode?: boolean;
+  onToggleExploration?: () => void;
 }
 
 export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
   interactiveMode: externalInteractiveMode,
   onToggleInteractive,
+  explorationMode,
+  onToggleExploration,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [isInteractive, setIsInteractive] = useState(externalInteractiveMode || false);
@@ -34,13 +38,26 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
   const [activeTelemetryMode, setActiveTelemetryMode] = useState<
     'strategy' | 'finance' | 'neural'
   >('strategy');
-  const [activePreset, setActivePreset] = useState<'default' | 'close' | 'hud'>('default');
+  const [activePreset, setActivePreset] = useState<'default' | 'close' | 'hud'>(
+    explorationMode ? 'close' : 'default'
+  );
 
   useEffect(() => {
     if (externalInteractiveMode !== undefined) {
       setIsInteractive(externalInteractiveMode);
     }
   }, [externalInteractiveMode]);
+
+  // Sync camera preset when explorationMode toggles
+  useEffect(() => {
+    if (explorationMode !== undefined) {
+      if (explorationMode) {
+        setPresetRef.current?.('close');
+      } else {
+        setPresetRef.current?.('default');
+      }
+    }
+  }, [explorationMode]);
 
   // Trigger scan pulse ref
   const scanTriggerRef = useRef<(() => void) | null>(null);
@@ -694,85 +711,173 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
       blending: THREE.AdditiveBlending,
     });
 
-    // Humanoid Body Construction (Head, Hair, Torso, Hips, Arms, Legs, Boots)
-    const createHologramPart = (geo: THREE.BufferGeometry, pos: [number, number, number], rot?: [number, number, number]) => {
+    // Glowing eyes material for avatar
+    const eyeMat = new THREE.MeshBasicMaterial({
+      color: 0x67e8f9,
+      blending: THREE.AdditiveBlending,
+    });
+
+    // Humanoid Body Construction (Head, Face, Hair, Clavicle, Torso, Hips, Arms with 5 Fingers, Legs, Boots)
+    const createHologramPart = (
+      geo: THREE.BufferGeometry,
+      pos: [number, number, number],
+      rot?: [number, number, number],
+      scale?: [number, number, number]
+    ) => {
       const partGroup = new THREE.Group();
       const meshSolid = new THREE.Mesh(geo, hologramMaterial);
       const meshWire = new THREE.Mesh(geo, wireframeMaterial);
       partGroup.add(meshSolid, meshWire);
       partGroup.position.set(...pos);
       if (rot) partGroup.rotation.set(...rot);
+      if (scale) partGroup.scale.set(...scale);
       avatarGroup.add(partGroup);
       return partGroup;
     };
 
-    // 1. Head & Facial Shell
-    const headGeo = new THREE.SphereGeometry(1.05, 32, 24);
-    headGeo.scale(1.0, 1.25, 1.05);
-    createHologramPart(headGeo, [0, 20.8, 0]);
+    // 1. HEAD & HUMAN FACIAL PROFILE
+    // Cranium
+    const headGeo = new THREE.SphereGeometry(0.95, 32, 24);
+    headGeo.scale(0.95, 1.15, 1.0);
+    createHologramPart(headGeo, [0, 21.0, 0]);
 
-    // 2. Bob Hairstyle (as shown in image)
-    const hairGeo = new THREE.SphereGeometry(1.3, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
-    hairGeo.scale(1.05, 1.15, 1.1);
-    createHologramPart(hairGeo, [0, 21.2, -0.1]);
+    // Feminine Jaw & Chin
+    const jawGeo = new THREE.CylinderGeometry(0.72, 0.42, 1.05, 24);
+    jawGeo.scale(1.0, 1.0, 0.9);
+    createHologramPart(jawGeo, [0, 20.15, 0.16], [0.15, 0, 0]);
 
-    // 3. Neck
-    const neckGeo = new THREE.CylinderGeometry(0.48, 0.58, 1.4, 24);
-    createHologramPart(neckGeo, [0, 19.3, 0]);
+    const chinGeo = new THREE.SphereGeometry(0.26, 16, 16);
+    createHologramPart(chinGeo, [0, 19.65, 0.45]);
 
-    // 4. Chest & Shoulders (Cybernetic Silhouette)
-    const chestGeo = new THREE.CylinderGeometry(1.65, 1.2, 3.2, 24);
-    chestGeo.scale(1.2, 1.0, 0.85);
-    createHologramPart(chestGeo, [0, 17.2, 0]);
+    // Delicate Nose Bridge & Tip
+    const noseGeo = new THREE.ConeGeometry(0.12, 0.4, 10);
+    createHologramPart(noseGeo, [0, 20.65, 0.95], [0.42, 0, 0]);
 
-    // Feminine Contour Accents
-    const bustLeftGeo = new THREE.SphereGeometry(0.75, 20, 20);
-    bustLeftGeo.scale(1.0, 0.9, 1.1);
-    createHologramPart(bustLeftGeo, [-0.68, 17.4, 0.72]);
-    const bustRightGeo = new THREE.SphereGeometry(0.75, 20, 20);
-    bustRightGeo.scale(1.0, 0.9, 1.1);
-    createHologramPart(bustRightGeo, [0.68, 17.4, 0.72]);
+    // Glowing Cyan Eyes
+    const eyeGeo = new THREE.SphereGeometry(0.1, 14, 14);
+    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+    leftEye.position.set(-0.31, 20.82, 0.88);
+    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+    rightEye.position.set(0.31, 20.82, 0.88);
+    avatarGroup.add(leftEye, rightEye);
 
-    // 5. Waist / Midriff
-    const waistGeo = new THREE.CylinderGeometry(1.15, 1.4, 2.4, 24);
-    waistGeo.scale(1.1, 1.0, 0.85);
-    createHologramPart(waistGeo, [0, 14.6, 0]);
+    // 2. SLEEK FEMININE BOB HAIRSTYLE (Matching image attachment)
+    const hairTopGeo = new THREE.SphereGeometry(1.2, 32, 24, 0, Math.PI * 2, 0, Math.PI * 0.65);
+    hairTopGeo.scale(1.05, 1.15, 1.1);
+    createHologramPart(hairTopGeo, [0, 21.2, -0.1]);
 
-    // 6. Hips / Pelvis
-    const hipsGeo = new THREE.CylinderGeometry(1.4, 1.55, 2.2, 24);
-    hipsGeo.scale(1.25, 1.0, 0.95);
-    createHologramPart(hipsGeo, [0, 12.5, 0]);
+    // Side bangs framing the face
+    const bangGeo = new THREE.CylinderGeometry(0.24, 0.12, 1.9, 14);
+    createHologramPart(bangGeo, [-0.98, 20.4, 0.32], [0.12, 0, -0.14]);
+    createHologramPart(bangGeo.clone(), [0.98, 20.4, 0.32], [0.12, 0, 0.14]);
 
-    // 7. Left Leg (Thigh, Knee, Calf, Boot)
-    const thighGeo = new THREE.CylinderGeometry(0.72, 0.52, 5.2, 24);
-    thighGeo.scale(1.0, 1.0, 0.95);
-    createHologramPart(thighGeo, [-1.05, 9.0, 0.2], [0.03, 0, -0.06]);
+    // 3. NECK & CLAVICLES
+    const neckGeo = new THREE.CylinderGeometry(0.38, 0.46, 1.3, 24);
+    createHologramPart(neckGeo, [0, 19.25, 0.05]);
 
-    const kneeLeftGeo = new THREE.SphereGeometry(0.55, 16, 16);
-    createHologramPart(kneeLeftGeo, [-1.2, 6.2, 0.2]);
+    const clavicleGeo = new THREE.CylinderGeometry(0.08, 0.08, 2.4, 12);
+    createHologramPart(clavicleGeo, [0, 18.55, 0.32], [0, 0, Math.PI / 2]);
 
-    const calfLeftGeo = new THREE.CylinderGeometry(0.52, 0.42, 5.0, 24);
-    createHologramPart(calfLeftGeo, [-1.22, 3.6, 0.15], [-0.02, 0, 0.04]);
+    // 4. CHEST & NATURAL FEMININE BUST CONTOUR
+    const chestGeo = new THREE.CylinderGeometry(1.28, 1.05, 2.2, 24);
+    chestGeo.scale(1.15, 1.0, 0.85);
+    const chestGroup = createHologramPart(chestGeo, [0, 17.3, 0]);
 
-    const bootLeftGeo = new THREE.BoxGeometry(0.95, 1.1, 2.2);
-    createHologramPart(bootLeftGeo, [-1.15, 0.6, 0.5]);
+    // Contoured Breasts (anatomically proportioned)
+    const breastGeo = new THREE.SphereGeometry(0.62, 24, 24);
+    breastGeo.scale(1.0, 0.95, 1.18);
+    createHologramPart(breastGeo, [-0.52, 17.55, 0.76], [0.15, -0.1, 0]);
+    createHologramPart(breastGeo.clone(), [0.52, 17.55, 0.76], [0.15, 0.1, 0]);
 
-    // 8. Right Leg (Thigh, Knee, Calf, Boot)
-    createHologramPart(thighGeo.clone(), [1.05, 9.0, 0.2], [0.03, 0, 0.06]);
-    const kneeRightGeo = new THREE.SphereGeometry(0.55, 16, 16);
-    createHologramPart(kneeRightGeo, [1.2, 6.2, 0.2]);
-    createHologramPart(calfLeftGeo.clone(), [1.22, 3.6, 0.15], [-0.02, 0, -0.04]);
-    const bootRightGeo = new THREE.BoxGeometry(0.95, 1.1, 2.2);
-    createHologramPart(bootRightGeo, [1.15, 0.6, 0.5]);
+    // 5. WAIST (Hourglass curvature) & NAVEL
+    const waistGeo = new THREE.CylinderGeometry(0.85, 1.12, 1.9, 24);
+    waistGeo.scale(1.05, 1.0, 0.85);
+    createHologramPart(waistGeo, [0, 15.3, 0]);
 
-    // 9. Arms & Hands
-    const upperArmGeo = new THREE.CylinderGeometry(0.42, 0.35, 4.4, 20);
-    createHologramPart(upperArmGeo, [-2.2, 16.0, 0], [0, 0, 0.12]);
-    const forearmGeo = new THREE.CylinderGeometry(0.35, 0.28, 4.2, 20);
-    createHologramPart(forearmGeo, [-2.55, 12.0, 0.1], [0.1, 0, 0.05]);
+    const navelGeo = new THREE.SphereGeometry(0.06, 8, 8);
+    createHologramPart(navelGeo, [0, 15.15, 0.65]);
 
-    createHologramPart(upperArmGeo.clone(), [2.2, 16.0, 0], [0, 0, -0.12]);
-    createHologramPart(forearmGeo.clone(), [2.55, 12.0, 0.1], [0.1, 0, -0.05]);
+    // 6. HIPS & PELVIS
+    const hipsGeo = new THREE.CylinderGeometry(1.12, 1.42, 1.9, 24);
+    hipsGeo.scale(1.22, 1.0, 0.95);
+    createHologramPart(hipsGeo, [0, 13.4, 0]);
+
+    // 7. ARMS & DETAILED 5-FINGER HANDS
+    // Shoulder Deltoids
+    const shoulderGeo = new THREE.SphereGeometry(0.48, 18, 18);
+    createHologramPart(shoulderGeo, [-1.82, 18.1, 0]);
+    createHologramPart(shoulderGeo.clone(), [1.82, 18.1, 0]);
+
+    // Upper Arms (biceps/triceps)
+    const upperArmGeo = new THREE.CylinderGeometry(0.32, 0.26, 3.4, 20);
+    createHologramPart(upperArmGeo, [-2.0, 16.2, 0], [0, 0, 0.12]);
+    createHologramPart(upperArmGeo.clone(), [2.0, 16.2, 0], [0, 0, -0.12]);
+
+    // Elbows
+    const elbowGeo = new THREE.SphereGeometry(0.26, 14, 14);
+    createHologramPart(elbowGeo, [-2.28, 14.4, 0.05]);
+    createHologramPart(elbowGeo.clone(), [2.28, 14.4, 0.05]);
+
+    // Forearms
+    const forearmGeo = new THREE.CylinderGeometry(0.26, 0.21, 3.2, 20);
+    createHologramPart(forearmGeo, [-2.48, 12.7, 0.18], [0.12, 0, 0.08]);
+    createHologramPart(forearmGeo.clone(), [2.48, 12.7, 0.18], [0.12, 0, -0.08]);
+
+    // Palms
+    const palmGeo = new THREE.BoxGeometry(0.26, 0.52, 0.14);
+    createHologramPart(palmGeo, [-2.72, 10.9, 0.42], [0.15, 0, 0.12]);
+    createHologramPart(palmGeo.clone(), [2.72, 10.9, 0.42], [0.15, 0, -0.12]);
+
+    // 5 Articulated Fingers on each hand
+    const createHandFingers = (side: 1 | -1) => {
+      const fingerGeo = new THREE.CylinderGeometry(0.045, 0.035, 0.42, 8);
+      const thumbGeo = new THREE.CylinderGeometry(0.052, 0.04, 0.34, 8);
+      const handX = side * 2.72;
+      const handY = 10.55;
+      const handZ = 0.45;
+
+      // Thumb
+      createHologramPart(thumbGeo, [handX + side * 0.15, handY + 0.18, handZ + 0.09], [0.2, side * 0.4, side * 0.5]);
+      // Index
+      createHologramPart(fingerGeo, [handX + side * 0.09, handY - 0.06, handZ], [0.1, 0, side * 0.05]);
+      // Middle
+      createHologramPart(fingerGeo.clone(), [handX + side * 0.03, handY - 0.1, handZ], [0.1, 0, 0]);
+      // Ring
+      createHologramPart(fingerGeo.clone(), [handX - side * 0.045, handY - 0.07, handZ], [0.1, 0, -side * 0.05]);
+      // Little
+      createHologramPart(fingerGeo.clone(), [handX - side * 0.1, handY - 0.03, handZ], [0.1, 0, -side * 0.1]);
+    };
+    createHandFingers(1);
+    createHandFingers(-1);
+
+    // 8. LEGS (Thighs, Knees, Calves, Boots)
+    // Feminine contoured thighs
+    const thighGeo = new THREE.CylinderGeometry(0.65, 0.44, 4.4, 24);
+    thighGeo.scale(1.05, 1.0, 0.95);
+    createHologramPart(thighGeo, [-0.88, 10.5, 0.15], [0.04, 0, -0.06]);
+    createHologramPart(thighGeo.clone(), [0.88, 10.5, 0.15], [0.04, 0, 0.06]);
+
+    // Anatomical Knees (Patella)
+    const patellaGeo = new THREE.SphereGeometry(0.35, 18, 18);
+    patellaGeo.scale(1.0, 1.15, 0.9);
+    createHologramPart(patellaGeo, [-0.98, 8.0, 0.3]);
+    createHologramPart(patellaGeo.clone(), [0.98, 8.0, 0.3]);
+
+    // Calves (Gastrocnemius curvature)
+    const calfGeo = new THREE.CylinderGeometry(0.48, 0.3, 4.2, 24);
+    calfGeo.scale(1.0, 1.0, 0.92);
+    createHologramPart(calfGeo, [-1.02, 5.7, 0.18], [-0.03, 0, 0.04]);
+    createHologramPart(calfGeo.clone(), [1.02, 5.7, 0.18], [-0.03, 0, -0.04]);
+
+    // Ankles
+    const ankleGeo = new THREE.SphereGeometry(0.3, 14, 14);
+    createHologramPart(ankleGeo, [-0.98, 3.4, 0.18]);
+    createHologramPart(ankleGeo.clone(), [0.98, 3.4, 0.18]);
+
+    // Futuristic Aerodynamic High-Tech Boots
+    const bootGeo = new THREE.BoxGeometry(0.72, 0.95, 1.85);
+    createHologramPart(bootGeo, [-0.98, 2.9, 0.65], [-0.08, 0, 0]);
+    createHologramPart(bootGeo.clone(), [0.98, 2.9, 0.65], [-0.08, 0, 0]);
 
     // Floating Hologram Particle Matrix (Sparkles around avatar)
     const avatarParticleCount = 650;
@@ -937,8 +1042,8 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
       const elapsedTime = clock.getElapsedTime();
 
       // Camera lerp with mouse parallax and scroll parallax in 3D
-      const panFactor = isInteractive ? 18 : 8;
-      const scrollOffset = isInteractive ? 0 : Math.min(scrollY * 0.012, 16);
+      const panFactor = isInteractive || explorationMode ? 18 : 8;
+      const scrollOffset = isInteractive || explorationMode ? 0 : Math.min(scrollY * 0.012, 16);
       const desiredX = targetCameraX + mouseX * panFactor;
       const desiredY = targetCameraY - mouseY * (panFactor * 0.4) - scrollOffset;
 
@@ -960,6 +1065,8 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
 
       // Avatar subtle respiration / holographic levitation
       avatarGroup.position.y = Math.sin(elapsedTime * 1.6) * 0.12;
+      const breath = Math.sin(elapsedTime * 2.2);
+      chestGroup.scale.set(1.15 * (1.0 + breath * 0.018), 1.0 + breath * 0.012, 0.85 * (1.0 + breath * 0.024));
 
       // Floating HUD Gentle Bobbing
       hudWorld.position.y = 16.5 + Math.sin(elapsedTime * 1.8 + 0.5) * 0.25;
@@ -1039,16 +1146,35 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
 
   return (
     <>
-      {/* Three.js Canvas Container (Ambient 3D background in motion when browsing, full screen when inspected) */}
+      {/* Three.js Canvas Container (Ambient 3D background in motion when browsing, full screen when inspected or in exploration mode) */}
       <div
         ref={mountRef}
         className={`fixed inset-0 transition-opacity duration-700 ${
-          isInteractive
+          isInteractive || explorationMode
             ? 'z-30 pointer-events-auto opacity-100'
             : 'z-0 pointer-events-none opacity-60'
         }`}
         aria-hidden="true"
       />
+
+      {/* Floating Exploration Mode Badge */}
+      {explorationMode && (
+        <div className="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-40 px-4 py-2 rounded-2xl glass-panel-elevated border border-cyan-400/50 shadow-2xl flex items-center gap-3 backdrop-blur-xl animate-fade-up">
+          <span className="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+          <span className="text-xs font-bold text-white tracking-wide">
+            Vista de Exploración 3D Activa · Zoom sobre Avatar Sostana
+          </span>
+          {onToggleExploration && (
+            <button
+              onClick={onToggleExploration}
+              type="button"
+              className="px-2.5 py-1 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-xs font-semibold text-cyan-300 border border-cyan-400/30 transition-colors cursor-pointer"
+            >
+              Volver a Vista General
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Floating Toggle Pill (Always available in top-right or hero to switch to 3D Inspection Mode) */}
       <div className={`fixed top-20 right-4 sm:right-6 z-40 ${isInteractive ? 'block' : 'hidden sm:block'}`}>

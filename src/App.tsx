@@ -103,8 +103,9 @@ export default function App() {
     setIsProposalModalOpen(true);
   };
 
-  // 3D Interactive Hologram Inspection State
+  // 3D Interactive Hologram Inspection State & Exploration Zoom
   const [isHologram3DActive, setIsHologram3DActive] = useState(false);
+  const [isExplorationViewActive, setIsExplorationViewActive] = useState(false);
 
   const handleOpenProposalWithAudit = (auditData: {
     monthlyVisitors: number;
@@ -190,6 +191,8 @@ export default function App() {
       <ThreeBackground
         interactiveMode={isHologram3DActive}
         onToggleInteractive={() => setIsHologram3DActive(!isHologram3DActive)}
+        explorationMode={isExplorationViewActive}
+        onToggleExploration={() => setIsExplorationViewActive(!isExplorationViewActive)}
       />
 
       {/* Strict 3-zone Top Bar Contract Navbar */}
@@ -216,6 +219,8 @@ export default function App() {
           onScrollToCalculator={scrollToCalculator}
           onScrollToServices={scrollToServices}
           onOpenHologram={() => setIsHologram3DActive(true)}
+          isExplorationView={isExplorationViewActive}
+          onToggleExplorationView={() => setIsExplorationViewActive(!isExplorationViewActive)}
         />
 
         {/* High-Retention Star Hook: Interactive E-Commerce Friction & Sales Leak Audit */}
