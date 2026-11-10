@@ -11,22 +11,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
 } from 'recharts';
 import {
   TrendingUp,
   Activity,
   Zap,
-  Users,
-  ShoppingBag,
   ArrowUpRight,
-  ShieldCheck,
   Download,
-  Filter,
   DollarSign,
-  Clock,
   Sparkles,
-  BarChart3,
 } from 'lucide-react';
 import { triggerCorporateConfetti } from '../utils/confetti';
 

@@ -4,18 +4,12 @@ import { CALCULATOR_OPTIONS } from '../data/servicesData';
 import { triggerCorporateConfetti } from '../utils/confetti';
 import {
   ArrowRight,
-  Calendar,
-  Check,
   CheckCircle2,
-  Clock,
-  Cpu,
-  DollarSign,
   Download,
   FileCheck,
   Mail,
   MessageCircle,
   Phone,
-  Send,
   ShieldCheck,
   Sparkles,
   User,

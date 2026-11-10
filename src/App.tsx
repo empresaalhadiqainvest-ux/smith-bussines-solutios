@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { SpotlightServicesGrid } from './components/SpotlightServicesGrid';
@@ -10,20 +10,41 @@ import { Methodology } from './components/Methodology';
 import { ContactSection } from './components/ContactSection';
 import { FloatingChatWidget } from './components/FloatingChatWidget';
 import { Footer } from './components/Footer';
-import { VanillaWidgetModal } from './components/VanillaWidgetModal';
-import { SpotlightCodeModal } from './components/SpotlightCodeModal';
-import { MultiStepCodeModal } from './components/MultiStepCodeModal';
-import { ChatWidgetCodeModal } from './components/ChatWidgetCodeModal';
-import { ProposalModal } from './components/ProposalModal';
-import { ServiceDetailsModal } from './components/ServiceDetailsModal';
 import { InsightsSection } from './components/InsightsSection';
-import { WhitepaperReaderModal } from './components/WhitepaperReaderModal';
 import { EcommerceGrowthHook } from './components/EcommerceGrowthHook';
 import { TestimonialsSection } from './components/TestimonialsSection';
-import { PerformanceMetricsDashboard } from './components/PerformanceMetricsDashboard';
 import { SidebarNav } from './components/SidebarNav';
-import { SuccessAnimationOverlay, SuccessOverlayData } from './components/SuccessAnimationOverlay';
+import type { SuccessOverlayData } from './components/SuccessAnimationOverlay';
 import { CalculatorState, ServiceItem, SolutionType, WhitepaperItem } from './types';
+
+// Performance optimization: Lazy-load heavy charts and modals that are only opened on interaction
+const PerformanceMetricsDashboard = lazy(() =>
+  import('./components/PerformanceMetricsDashboard').then((m) => ({ default: m.PerformanceMetricsDashboard }))
+);
+const VanillaWidgetModal = lazy(() =>
+  import('./components/VanillaWidgetModal').then((m) => ({ default: m.VanillaWidgetModal }))
+);
+const SpotlightCodeModal = lazy(() =>
+  import('./components/SpotlightCodeModal').then((m) => ({ default: m.SpotlightCodeModal }))
+);
+const MultiStepCodeModal = lazy(() =>
+  import('./components/MultiStepCodeModal').then((m) => ({ default: m.MultiStepCodeModal }))
+);
+const ChatWidgetCodeModal = lazy(() =>
+  import('./components/ChatWidgetCodeModal').then((m) => ({ default: m.ChatWidgetCodeModal }))
+);
+const ProposalModal = lazy(() =>
+  import('./components/ProposalModal').then((m) => ({ default: m.ProposalModal }))
+);
+const ServiceDetailsModal = lazy(() =>
+  import('./components/ServiceDetailsModal').then((m) => ({ default: m.ServiceDetailsModal }))
+);
+const WhitepaperReaderModal = lazy(() =>
+  import('./components/WhitepaperReaderModal').then((m) => ({ default: m.WhitepaperReaderModal }))
+);
+const SuccessAnimationOverlay = lazy(() =>
+  import('./components/SuccessAnimationOverlay').then((m) => ({ default: m.SuccessAnimationOverlay }))
+);
 
 export default function App() {
   // Sidebar navigation drawer state
@@ -251,13 +272,15 @@ export default function App() {
         />
 
         {/* Quantified Empirical Growth Visualizer: Recharts Performance Metrics Dashboard */}
-        <PerformanceMetricsDashboard
-          onOpenProposalModal={() => setIsProposalModalOpen(true)}
-          onScrollToAuditor={() => {
-            const el = document.getElementById('auditor-ecommerce');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-        />
+        <Suspense fallback={<div className="h-32 flex items-center justify-center text-slate-500 text-xs">Cargando métricas...</div>}>
+          <PerformanceMetricsDashboard
+            onOpenProposalModal={() => setIsProposalModalOpen(true)}
+            onScrollToAuditor={() => {
+              const el = document.getElementById('auditor-ecommerce');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+          />
+        </Suspense>
 
         {/* Quantified Case Studies & Proof */}
         <CaseStudies />
@@ -300,73 +323,90 @@ export default function App() {
       {/* Quiet Corporate Footer */}
       <Footer onOpenWidgetCode={() => setIsWidgetModalOpen(true)} />
 
-      {/* Standalone Code Modals */}
-      <VanillaWidgetModal
-        isOpen={isWidgetModalOpen}
-        onClose={() => setIsWidgetModalOpen(false)}
-      />
+      {/* Standalone Code Modals & Overlays (Deferred Lazy Loaded) */}
+      <Suspense fallback={null}>
+        {isWidgetModalOpen && (
+          <VanillaWidgetModal
+            isOpen={isWidgetModalOpen}
+            onClose={() => setIsWidgetModalOpen(false)}
+          />
+        )}
 
-      <SpotlightCodeModal
-        isOpen={isSpotlightModalOpen}
-        onClose={() => setIsSpotlightModalOpen(false)}
-      />
+        {isSpotlightModalOpen && (
+          <SpotlightCodeModal
+            isOpen={isSpotlightModalOpen}
+            onClose={() => setIsSpotlightModalOpen(false)}
+          />
+        )}
 
-      <MultiStepCodeModal
-        isOpen={isMultiStepModalOpen}
-        onClose={() => setIsMultiStepModalOpen(false)}
-      />
+        {isMultiStepModalOpen && (
+          <MultiStepCodeModal
+            isOpen={isMultiStepModalOpen}
+            onClose={() => setIsMultiStepModalOpen(false)}
+          />
+        )}
 
-      <ChatWidgetCodeModal
-        isOpen={isChatWidgetModalOpen}
-        onClose={() => setIsChatWidgetModalOpen(false)}
-      />
+        {isChatWidgetModalOpen && (
+          <ChatWidgetCodeModal
+            isOpen={isChatWidgetModalOpen}
+            onClose={() => setIsChatWidgetModalOpen(false)}
+          />
+        )}
 
-      {/* Interactive Detail & Formal Proposal Modals */}
-      <ProposalModal
-        isOpen={isProposalModalOpen}
-        onClose={() => setIsProposalModalOpen(false)}
-        calcState={calcState}
-        total={prefilledTotal}
-        weeks={prefilledWeeks}
-        onSuccessSubmission={handleProposalSuccess}
-      />
+        {/* Interactive Detail & Formal Proposal Modals */}
+        {isProposalModalOpen && (
+          <ProposalModal
+            isOpen={isProposalModalOpen}
+            onClose={() => setIsProposalModalOpen(false)}
+            calcState={calcState}
+            total={prefilledTotal}
+            weeks={prefilledWeeks}
+            onSuccessSubmission={handleProposalSuccess}
+          />
+        )}
 
-      <ServiceDetailsModal
-        service={activeServiceDetail}
-        onClose={() => setActiveServiceDetail(null)}
-        onSelectForCalculator={handleSelectServiceForCalculator}
-      />
+        {activeServiceDetail && (
+          <ServiceDetailsModal
+            service={activeServiceDetail}
+            onClose={() => setActiveServiceDetail(null)}
+            onSelectForCalculator={handleSelectServiceForCalculator}
+          />
+        )}
 
-      {/* Interactive Whitepaper & Trend Report Reader Modal */}
-      <WhitepaperReaderModal
-        whitepaper={activeWhitepaper}
-        isOpen={!!activeWhitepaper}
-        onClose={() => setActiveWhitepaper(null)}
-        onDownload={(wp) => {
-          // Trigger download and keep modal open or notify
-          const fileContent = `================================================================================\nSMITH BUSINESS SOLUTIONS · WHITE PAPER\n================================================================================\n${wp.title}\n\nRESUMEN:\n${wp.executiveSummary}\n\nHALLAZGOS:\n${wp.keyFindings.join('\n')}`;
-          const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `SBS_${wp.slug}.txt`;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          URL.revokeObjectURL(url);
-        }}
-        onRequestBriefing={() => {
-          setActiveWhitepaper(null);
-          scrollToContact();
-        }}
-      />
+        {/* Interactive Whitepaper & Trend Report Reader Modal */}
+        {activeWhitepaper && (
+          <WhitepaperReaderModal
+            whitepaper={activeWhitepaper}
+            isOpen={!!activeWhitepaper}
+            onClose={() => setActiveWhitepaper(null)}
+            onDownload={(wp) => {
+              const fileContent = `================================================================================\nSMITH BUSINESS SOLUTIONS · WHITE PAPER\n================================================================================\n${wp.title}\n\nRESUMEN:\n${wp.executiveSummary}\n\nHALLAZGOS:\n${wp.keyFindings.join('\n')}`;
+              const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+              const url = URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              link.download = `SBS_${wp.slug}.txt`;
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              URL.revokeObjectURL(url);
+            }}
+            onRequestBriefing={() => {
+              setActiveWhitepaper(null);
+              scrollToContact();
+            }}
+          />
+        )}
 
-      {/* Subtle Confetti & Success Animation Overlay */}
-      <SuccessAnimationOverlay
-        isOpen={successOverlay.isOpen}
-        onClose={() => setSuccessOverlay((prev) => ({ ...prev, isOpen: false }))}
-        data={successOverlay.data}
-      />
+        {/* Subtle Confetti & Success Animation Overlay */}
+        {successOverlay.isOpen && (
+          <SuccessAnimationOverlay
+            isOpen={successOverlay.isOpen}
+            onClose={() => setSuccessOverlay((prev) => ({ ...prev, isOpen: false }))}
+            data={successOverlay.data}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

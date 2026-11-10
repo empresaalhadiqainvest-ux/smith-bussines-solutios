@@ -2,11 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ArrowRight,
   Calendar,
-  Check,
-  CheckCircle2,
-  Clock,
   Cpu,
-  DollarSign,
   Download,
   ExternalLink,
   FileCheck,

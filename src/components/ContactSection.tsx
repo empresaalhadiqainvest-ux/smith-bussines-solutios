@@ -2,7 +2,6 @@ import React from 'react';
 import { CalculatorState } from '../types';
 import { MultiStepLeadForm } from './MultiStepLeadForm';
 import {
-  Clock,
   Mail,
   MapPin,
   ShieldCheck,

@@ -2,21 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import {
   Activity,
-  BarChart3,
   Camera,
   ChevronDown,
   ChevronUp,
-  Cpu,
-  Eye,
-  Globe,
   Maximize2,
   Minimize2,
-  Play,
   RotateCcw,
   Scan,
-  Shield,
-  Sparkles,
-  Zap,
 } from 'lucide-react';
 
 interface ThreeBackgroundProps {
@@ -41,6 +33,12 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
   const [activePreset, setActivePreset] = useState<'default' | 'close' | 'hud'>(
     explorationMode ? 'close' : 'default'
   );
+
+  const isInteractiveRef = useRef(isInteractive);
+  isInteractiveRef.current = isInteractive;
+
+  const explorationModeRef = useRef(explorationMode);
+  explorationModeRef.current = explorationMode;
 
   useEffect(() => {
     if (externalInteractiveMode !== undefined) {
@@ -1042,8 +1040,9 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
       const elapsedTime = clock.getElapsedTime();
 
       // Camera lerp with mouse parallax and scroll parallax in 3D
-      const panFactor = isInteractive || explorationMode ? 18 : 8;
-      const scrollOffset = isInteractive || explorationMode ? 0 : Math.min(scrollY * 0.012, 16);
+      const isInter = isInteractiveRef.current || explorationModeRef.current;
+      const panFactor = isInter ? 18 : 8;
+      const scrollOffset = isInter ? 0 : Math.min(scrollY * 0.012, 16);
       const desiredX = targetCameraX + mouseX * panFactor;
       const desiredY = targetCameraY - mouseY * (panFactor * 0.4) - scrollOffset;
 
@@ -1142,7 +1141,7 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
         mount.removeChild(renderer.domElement);
       }
     };
-  }, [isInteractive]);
+  }, []);
 
   return (
     <>

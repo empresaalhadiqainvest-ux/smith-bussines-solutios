@@ -1,19 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ArrowRight,
-  Briefcase,
-  Check,
-  CheckCircle2,
-  Cpu,
-  DollarSign,
-  Globe,
-  Layers,
-  Shield,
-  ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  Zap,
-} from 'lucide-react';
+import { ArrowRight, Check, Globe, TrendingUp } from 'lucide-react';
 import { SolutionType } from '../types';
 
 interface InternationalPricingProps {

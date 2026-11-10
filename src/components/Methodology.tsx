@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, CheckCircle2, Code2, Database, Rocket, ShieldCheck, FileCheck, Cpu, Terminal, Users } from 'lucide-react';
+import { CheckCircle2, Code2, Database, Rocket, ShieldCheck, FileCheck, Terminal } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
 
 interface PhaseDetail {

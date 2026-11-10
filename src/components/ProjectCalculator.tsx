@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CALCULATOR_OPTIONS } from '../data/servicesData';
 import { CalculatorState, DeliverySpeed, ProjectScale, SolutionType } from '../types';
 import {
@@ -12,10 +12,6 @@ import {
   Clock,
   Code2,
   Cpu,
-  DollarSign,
-  FileText,
-  Info,
-  Layers,
   Rocket,
   Shield,
   Sparkles,

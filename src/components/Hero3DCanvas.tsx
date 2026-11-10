@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Eye, RotateCw, Scan, Sparkles, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
+import { RotateCw, Scan, Sparkles, Maximize2, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface Hero3DCanvasProps {
   onOpenFullscreenHologram?: () => void;
@@ -11,6 +11,8 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isRotating, setIsRotating] = useState(true);
+  const isRotatingRef = useRef(isRotating);
+  isRotatingRef.current = isRotating;
   const [isScanning, setIsScanning] = useState(false);
   const [isZoomedIn, setIsZoomedIn] = useState(false);
 
@@ -429,7 +431,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
       uniforms.uScanY.value = scanY;
 
       // Continuous humanoid rotation + damped tilt towards cursor
-      if (isRotating) {
+      if (isRotatingRef.current) {
         avatarGroup.rotation.y += 0.007;
       }
       avatarGroup.rotation.y += (targetRotY - avatarGroup.rotation.y) * 0.05;
@@ -522,7 +524,7 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
         container.removeChild(renderer.domElement);
       }
     };
-  }, [isRotating]);
+  }, []);
 
   return (
     <div className="relative w-full h-full flex flex-col justify-between">
@@ -593,11 +595,15 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
           <button
             type="button"
             onClick={() => scanTriggerRef.current?.()}
-            className="p-1.5 px-2.5 rounded-lg bg-white/5 hover:bg-cyan-500/20 border border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300 text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer"
+            className={`p-1.5 px-2.5 rounded-lg border text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer ${
+              isScanning
+                ? 'bg-cyan-400 text-slate-950 border-cyan-300 shadow-md font-bold'
+                : 'bg-white/5 hover:bg-cyan-500/20 border-white/10 hover:border-cyan-400/40 text-slate-300 hover:text-cyan-300'
+            }`}
             title="Escanear Malla Holográfica"
           >
-            <Scan className="w-3.5 h-3.5 text-amber-400" />
-            <span>Escanear</span>
+            <Scan className={`w-3.5 h-3.5 ${isScanning ? 'text-slate-950 animate-spin' : 'text-amber-400'}`} />
+            <span>{isScanning ? 'Escaneando...' : 'Escanear'}</span>
           </button>
         </div>
       </div>

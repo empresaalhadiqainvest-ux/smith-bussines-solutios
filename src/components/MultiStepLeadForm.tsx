@@ -3,19 +3,15 @@ import {
   ArrowLeft,
   ArrowRight,
   Briefcase,
-  Building,
   Calendar,
   Check,
   CheckCircle2,
   Clock,
-  DollarSign,
   Download,
   ExternalLink,
-  FileCheck,
   Mail,
   MessageCircle,
   MessageSquare,
-  Phone,
   Send,
   ShieldCheck,
   Sparkles,
@@ -23,7 +19,6 @@ import {
   Video,
 } from 'lucide-react';
 import { CalculatorState } from '../types';
-import { CALCULATOR_OPTIONS } from '../data/servicesData';
 import { triggerCorporateConfetti } from '../utils/confetti';
 
 interface MultiStepLeadFormProps {

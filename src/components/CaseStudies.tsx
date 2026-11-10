@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CASE_STUDIES } from '../data/servicesData';
-import { ArrowUpRight, BarChart3, Building, CheckCircle2, Clock, ShieldCheck, TrendingUp, Sparkles, Zap } from 'lucide-react';
+import { Building, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export const CaseStudies: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'all' | 'retail' | 'saas' | 'b2b'>('all');

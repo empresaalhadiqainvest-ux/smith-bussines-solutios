@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowUp, Code2, Globe, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { ArrowUp, Code2, MapPin, MessageCircle } from 'lucide-react';
 
 interface FooterProps {
   onOpenWidgetCode: () => void;

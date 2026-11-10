@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Copy, Download, ExternalLink, Sparkles, X } from 'lucide-react';
+import { Check, Copy, Download, Sparkles, X } from 'lucide-react';
 
 interface VanillaWidgetModalProps {
   isOpen: boolean;

@@ -8,9 +8,7 @@ import {
   Calculator,
   CheckCircle2,
   Code2,
-  Cpu,
   Layers,
-  Sparkles,
   TrendingUp,
 } from 'lucide-react';
 

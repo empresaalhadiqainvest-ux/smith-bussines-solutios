@@ -3,9 +3,7 @@ import {
   AlertTriangle,
   ArrowRight,
   Bot,
-  CheckCircle2,
   DollarSign,
-  Flame,
   Gauge,
   Percent,
   Send,
@@ -36,7 +34,6 @@ export const EcommerceGrowthHook: React.FC<EcommerceGrowthHookProps> = ({
   const [visitors, setVisitors] = useState<number>(25000);
   const [avgTicket, setAvgTicket] = useState<number>(75);
   const [conversionRate, setConversionRate] = useState<number>(1.2);
-  const [hasCalculated, setHasCalculated] = useState<boolean>(false);
 
   // Calculations
   const auditResults = useMemo(() => {
@@ -69,7 +66,6 @@ export const EcommerceGrowthHook: React.FC<EcommerceGrowthHookProps> = ({
 
   const handleApplyAudit = () => {
     triggerCorporateConfetti();
-    setHasCalculated(true);
     onOpenProposalWithAudit({
       monthlyVisitors: visitors,
       avgTicket,

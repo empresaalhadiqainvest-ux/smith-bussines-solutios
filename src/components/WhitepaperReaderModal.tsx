@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import {
   ArrowDownToLine,
-  Bookmark,
   Check,
   CheckCircle2,
-  Clock,
   Copy,
-  ExternalLink,
   FileText,
-  Lock,
   MessageSquare,
-  Share2,
   TrendingUp,
   X,
 } from 'lucide-react';

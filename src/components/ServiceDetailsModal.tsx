@@ -5,8 +5,6 @@ import {
   Calculator,
   CheckCircle2,
   Clock,
-  Layers,
-  Sparkles,
   TrendingUp,
   X,
 } from 'lucide-react';

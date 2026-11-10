@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  ArrowLeft,
-  ArrowRight,
   BadgeCheck,
   Building2,
   ChevronLeft,
@@ -9,9 +7,7 @@ import {
   Pause,
   Play,
   Quote,
-  ShoppingBag,
   Star,
-  TrendingUp,
 } from 'lucide-react';
 
 interface TestimonialItem {

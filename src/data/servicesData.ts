@@ -1,4 +1,7 @@
 import { ServiceItem } from '../types';
+import softwareImg from '../assets/images/service_software_1794103684606.jpg';
+import automationImg from '../assets/images/service_automation_1794103683596.jpg';
+import consultingImg from '../assets/images/service_consulting_1794103683222.jpg';
 
 export const SERVICES: ServiceItem[] = [
   {
@@ -7,7 +10,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Tiendas E-Commerce & Páginas Web de Alto Desempeño',
     shortDesc: 'Desarrollo de tiendas online ultrarrápidas en Headless React 19, Shopify Plus y WooCommerce, con checkouts en menos de 0.4s y pasarelas de pago globales.',
     fullDesc: 'Ingeniería frontend y backend de clase mundial para marcas y negocios que no pueden permitirse perder ventas. Creamos tiendas e-commerce a medida con tiempos de carga sub-segundo, túneles de compra optimizados para móvil, inventario en tiempo real y conexión con pasarelas de pago internacionales (Stripe, PayPal, MercadoPago).',
-    image: '/src/assets/images/service_software_1794103684606.jpg',
+    image: softwareImg,
     tag: 'E-Commerce & Plataformas Web',
     deliverables: [
       'Storefront ultrarrápido en React 19 / Next.js / Shopify Headless',
@@ -27,7 +30,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Chatbots IA para Ventas & Automatización 24/7',
     shortDesc: 'Agentes conversacionales inteligentes en WhatsApp y Web que atienden clientes, recuperan carritos abandonados y procesan pedidos en piloto automático.',
     fullDesc: 'Transformamos tu canal de WhatsApp y web en un equipo comercial incansable que opera las 24 horas del día. Nuestros chatbots de IA están entrenados con el catálogo de tu negocio: responden dudas complejas, recomiendan productos personalizados, envían links de pago directo y actualizan tu CRM automáticamente.',
-    image: '/src/assets/images/service_automation_1794103683596.jpg',
+    image: automationImg,
     tag: 'Chatbots IA & Tareas Automatizadas',
     deliverables: [
       'Agente de Ventas con IA conectado a WhatsApp Business API y Web Widget',
@@ -47,7 +50,7 @@ export const SERVICES: ServiceItem[] = [
     title: 'Sistemas de Ventas Integrales & Ingeniería de Ingresos',
     shortDesc: 'Estructuración de embudos de conversión masiva, modelos de pricing dinámico, auditorías de rentabilidad y asesoría directiva para escalar la facturación.',
     fullDesc: 'Acompañamos a directores y dueños de negocio a convertir visitas en flujo de caja predecible. Auditamos fugas de clientes en el checkout, rediseñamos estrategias de precios, optimizamos márgenes brutos y diseñamos la arquitectura técnica para rondas de inversión o expansión internacional.',
-    image: '/src/assets/images/service_consulting_1794103683222.jpg',
+    image: consultingImg,
     tag: 'Sistemas de Venta & Estrategia',
     deliverables: [
       'Auditoría forense de embudo de ventas y tasa de abandono de checkout',

@@ -1,31 +1,54 @@
-# Smith Business Solutions — Web Portal
+# Smith Business Solutions · Plataforma Corporativa
 
-Sitio web profesional y plataforma de presentación de soluciones digitales, desarrollo web y consultoría.
+Plataforma empresarial de alto rendimiento con ingeniería frontend moderna (React 19 + TypeScript + Vite + Tailwind CSS), renderizado 3D de avatar humanoide procedural (Three.js), auditor interactivo de e-commerce, calculadora de proyectos y dashboards de telemetría financiera.
 
-## 🚀 Demostración en Línea
+## 🚀 Despliegues Compatibles
 
-El proyecto se encuentra publicado y accesible a través de GitHub Pages:
-
-👉 **[Ver Sitio Web en Vivo](https://empresaalhadiqainvest-ux.github.io/smith-bussines-solutios/)**
+Esta aplicación está optimizada con rutas relativas (`base: './'`) y división de paquetes en código (*vendor code splitting*), permitiendo su funcionamiento instantáneo tanto en **GitHub Pages** como en **Vercel**.
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+### 1. Despliegue en GitHub Pages (`empresaalhadiqainvest-ux.github.io/smith-bussines-solutios/`)
 
-- **HTML5:** Estructura semántica del sitio.
-- **CSS3:** Estilos visuales, diseño responsivo y maquetación.
-- **JavaScript (Vanilla):** Lógica de interacción en el cliente.
+El repositorio incluye la acción automatizada `.github/workflows/deploy.yml`.
+
+Para activarla:
+1. En tu repositorio de GitHub: Ve a **Settings** > **Pages**.
+2. En la sección **Build and deployment** > **Source**, selecciona **GitHub Actions**.
+3. Al hacer un `git push` a `main`, la acción construirá y publicará la plataforma automáticamente en:
+   👉 **`https://empresaalhadiqainvest-ux.github.io/smith-bussines-solutios/`**
 
 ---
 
-## 📁 Estructura del Proyecto
+### 2. Despliegue en Vercel (`vercel.app`)
 
-```text
-smith-bussines-solutios/
-├── index.html          # Página principal
-├── css/                # Hojas de estilo
-│   └── styles.css
-├── js/                 # Scripts de JavaScript
-│   └── main.js
-├── assets/             # Recursos multimedia (imágenes, iconos)
-└── README.md           # Documentación del repositorio
+El proyecto incluye el archivo de configuración `vercel.json` con soporte SPA preconfigurado.
+
+1. Ingresa a [Vercel](https://vercel.com/) e inicia sesión con tu cuenta de GitHub.
+2. Haz clic en **Add New** > **Project**.
+3. Selecciona el repositorio `smith-bussines-solutios`.
+4. El framework se detectará automáticamente como **Vite** con comando de compilación `npm run build` y directorio `dist`.
+5. Haz clic en **Deploy**. ¡Listo en menos de 45 segundos!
+
+---
+
+### 3. Desarrollo Local
+
+```bash
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev
+
+# Compilar para producción (archivos optimizados en /dist)
+npm run build
+```
+
+---
+
+## 🛠️ Características Principales
+- **Holograma 3D Humanoide**: Anatomía femenina modelada proceduralmente, ciclo de respiración y vista de exploración interactiva con zoom.
+- **Auditor E-Commerce en Vivo**: Calculador de fugas de ventas y proyecciones de facturación.
+- **Calculadora de Presupuestos**: Estimador de costos y plazos con desglose por moneda.
+- **Canales Directos**: Conexión directa a WhatsApp corporativo (`+58 422 027 3766`).

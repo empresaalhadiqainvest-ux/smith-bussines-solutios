@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Calculator, CheckCircle2, Eye, Image as ImageIcon, Maximize2, ShieldCheck, Sparkles, Zap } from 'lucide-react';
+import { ArrowRight, Calculator, CheckCircle2, Eye, Image as ImageIcon, Maximize2, ShieldCheck, Zap } from 'lucide-react';
 import { Hero3DCanvas } from './Hero3DCanvas';
 
 interface HeroProps {
@@ -182,8 +182,9 @@ export const Hero: React.FC<HeroProps> = ({
                 ) : (
                   <div className="relative w-full h-full group cursor-pointer" onClick={onOpenHologram}>
                     <img
-                      src="/assets/aistudio/Gemini_Generated_Image_o8cvmao8cvmao8cv_28a933f0.jpeg"
+                      src={`${import.meta.env.BASE_URL}assets/aistudio/Gemini_Generated_Image_o8cvmao8cvmao8cv_28a933f0.jpeg`}
                       alt="Avatar Holográfico Sostana Core AI en Sala de Juntas Corporativa de Smith Business Solutions"
+                      loading="lazy"
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
                     />

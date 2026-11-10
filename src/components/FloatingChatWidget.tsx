@@ -1,19 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
   BookOpen,
-  Bot,
   Calculator,
-  ChevronDown,
-  Clock,
   Layers,
   MessageCircle,
-  MessageSquare,
   Minus,
-  Paperclip,
   Phone,
   Send,
-  Sparkles,
-  User,
   X,
 } from 'lucide-react';
 
