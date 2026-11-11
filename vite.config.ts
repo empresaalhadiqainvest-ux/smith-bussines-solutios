@@ -19,7 +19,7 @@ export default defineConfig(() => {
       alias: {
         '@': path.resolve('.'),
       },
-      dedupe: ['react', 'react-dom'],
+      dedupe: ['react', 'react-dom', 'react-is'],
     },
     build: {
       target: 'esnext',
