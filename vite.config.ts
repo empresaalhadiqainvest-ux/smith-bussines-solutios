@@ -3,9 +3,17 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
+const getBase = () => {
+  if (process.env.VERCEL) return '/';
+  if (process.env.GITHUB_PAGES === 'true' || process.env.GITHUB_ACTIONS === 'true') {
+    return '/smith-bussines-solutios/';
+  }
+  return './';
+};
+
 export default defineConfig(() => {
   return {
-    base: './',
+    base: getBase(),
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

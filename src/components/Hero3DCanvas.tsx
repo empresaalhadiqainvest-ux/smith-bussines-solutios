@@ -50,11 +50,17 @@ export const Hero3DCanvas: React.FC<Hero3DCanvasProps> = ({
     let targetCamZ = 9.2;
 
     // 2. High-performance lightweight renderer
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: !isSoftwareGl,
-      powerPreference: 'high-performance',
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !isSoftwareGl,
+        powerPreference: 'high-performance',
+      });
+    } catch (e) {
+      console.warn('Hero3D WebGL initialization failed, fallback to 2D view:', e);
+      return;
+    }
     renderer.setSize(width, height);
     renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 1.75));
     renderer.outputColorSpace = THREE.SRGBColorSpace;

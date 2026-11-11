@@ -1,0 +1,27 @@
+{
+  "id": "smith-business-solutions",
+  "name": "Smith Business Solutions",
+  "short_name": "Smith SBS",
+  "description": "Plataforma empresarial de ingeniería digital, tiendas e-commerce de alto rendimiento y automatizaciones con IA.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#090D16",
+  "background_color": "#090D16",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["business", "finance", "productivity"]
+}

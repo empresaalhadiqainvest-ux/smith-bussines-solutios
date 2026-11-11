@@ -95,11 +95,17 @@ export const ThreeBackground: React.FC<ThreeBackgroundProps> = ({
     camera.position.set(0, 14, 48);
 
     // 2. WebGL Renderer
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: !isSoftwareGl,
-      powerPreference: 'high-performance',
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: !isSoftwareGl,
+        powerPreference: 'high-performance',
+      });
+    } catch (e) {
+      console.warn('WebGL initialization failed, falling back to ambient CSS background:', e);
+      return;
+    }
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;

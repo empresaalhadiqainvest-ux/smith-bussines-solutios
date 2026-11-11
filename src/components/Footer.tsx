@@ -3,9 +3,15 @@ import { ArrowUp, Code2, MapPin, MessageCircle } from 'lucide-react';
 
 interface FooterProps {
   onOpenWidgetCode: () => void;
+  onOpenTerms?: () => void;
+  onOpenPrivacy?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenWidgetCode }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onOpenWidgetCode,
+  onOpenTerms,
+  onOpenPrivacy,
+}) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -52,9 +58,26 @@ export const Footer: React.FC<FooterProps> = ({ onOpenWidgetCode }) => {
             <a href="#insights" className="hover:text-white transition-colors text-amber-300">
               Insights & Whitepapers
             </a>
+            <a href="#faq" className="hover:text-white transition-colors">
+              Preguntas Frecuentes
+            </a>
             <a href="#contacto" className="hover:text-white transition-colors">
               Contacto
             </a>
+            <button
+              onClick={onOpenTerms}
+              type="button"
+              className="hover:text-slate-200 transition-colors cursor-pointer"
+            >
+              Términos
+            </button>
+            <button
+              onClick={onOpenPrivacy}
+              type="button"
+              className="hover:text-slate-200 transition-colors cursor-pointer"
+            >
+              Privacidad
+            </button>
             <button
               onClick={onOpenWidgetCode}
               type="button"

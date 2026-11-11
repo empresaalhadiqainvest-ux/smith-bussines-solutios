@@ -7,6 +7,7 @@ import { ThreeBackground } from './components/ThreeBackground';
 import { ProjectCalculator } from './components/ProjectCalculator';
 import { CaseStudies } from './components/CaseStudies';
 import { Methodology } from './components/Methodology';
+import { FAQSection } from './components/FAQSection';
 import { ContactSection } from './components/ContactSection';
 import { FloatingChatWidget } from './components/FloatingChatWidget';
 import { Footer } from './components/Footer';
@@ -14,10 +15,14 @@ import { InsightsSection } from './components/InsightsSection';
 import { EcommerceGrowthHook } from './components/EcommerceGrowthHook';
 import { TestimonialsSection } from './components/TestimonialsSection';
 import { SidebarNav } from './components/SidebarNav';
+import { CookieBanner } from './components/CookieBanner';
 import type { SuccessOverlayData } from './components/SuccessAnimationOverlay';
 import { CalculatorState, ServiceItem, SolutionType, WhitepaperItem } from './types';
 
 // Performance optimization: Lazy-load heavy charts and modals that are only opened on interaction
+const LegalModal = lazy(() =>
+  import('./components/LegalModal').then((m) => ({ default: m.LegalModal }))
+);
 const PerformanceMetricsDashboard = lazy(() =>
   import('./components/PerformanceMetricsDashboard').then((m) => ({ default: m.PerformanceMetricsDashboard }))
 );
@@ -60,6 +65,13 @@ export default function App() {
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [activeServiceDetail, setActiveServiceDetail] = useState<ServiceItem | null>(null);
   const [activeWhitepaper, setActiveWhitepaper] = useState<WhitepaperItem | null>(null);
+  const [legalModalState, setLegalModalState] = useState<{
+    isOpen: boolean;
+    tab: 'terms' | 'privacy';
+  }>({
+    isOpen: false,
+    tab: 'terms',
+  });
 
   // Global synchronized calculator state
   const [calcState, setCalcState] = useState<CalculatorState>({
@@ -216,6 +228,14 @@ export default function App() {
         onToggleExploration={() => setIsExplorationViewActive(!isExplorationViewActive)}
       />
 
+      {/* Accessibility Skip Link */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-400 focus:text-slate-950 focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none"
+      >
+        Saltar al contenido principal
+      </a>
+
       {/* Strict 3-zone Top Bar Contract Navbar */}
       <Navbar
         onOpenWidgetCode={() => setIsWidgetModalOpen(true)}
@@ -234,7 +254,7 @@ export default function App() {
         onOpenProposalModal={() => setIsProposalModalOpen(true)}
       />
 
-      <main className="flex-1 relative z-10">
+      <main id="main-content" className="flex-1 relative z-10">
         {/* Modern Corporate Hero */}
         <Hero
           onScrollToCalculator={scrollToCalculator}
@@ -302,6 +322,12 @@ export default function App() {
         {/* Framework & Methodology */}
         <Methodology />
 
+        {/* Corporate Disclosure FAQ Section */}
+        <FAQSection
+          onScrollToCalculator={scrollToCalculator}
+          onScrollToContact={scrollToContact}
+        />
+
         {/* Interactive Multi-Step Lead Qualification Form & Contact */}
         <ContactSection
           calcState={calcState}
@@ -321,7 +347,16 @@ export default function App() {
       />
 
       {/* Quiet Corporate Footer */}
-      <Footer onOpenWidgetCode={() => setIsWidgetModalOpen(true)} />
+      <Footer
+        onOpenWidgetCode={() => setIsWidgetModalOpen(true)}
+        onOpenTerms={() => setLegalModalState({ isOpen: true, tab: 'terms' })}
+        onOpenPrivacy={() => setLegalModalState({ isOpen: true, tab: 'privacy' })}
+      />
+
+      {/* Production Cookie Consent Notice Banner */}
+      <CookieBanner
+        onOpenPrivacy={() => setLegalModalState({ isOpen: true, tab: 'privacy' })}
+      />
 
       {/* Standalone Code Modals & Overlays (Deferred Lazy Loaded) */}
       <Suspense fallback={null}>
@@ -404,6 +439,15 @@ export default function App() {
             isOpen={successOverlay.isOpen}
             onClose={() => setSuccessOverlay((prev) => ({ ...prev, isOpen: false }))}
             data={successOverlay.data}
+          />
+        )}
+
+        {/* Corporate Legal Terms & Privacy Policy Modal */}
+        {legalModalState.isOpen && (
+          <LegalModal
+            isOpen={legalModalState.isOpen}
+            initialTab={legalModalState.tab}
+            onClose={() => setLegalModalState((prev) => ({ ...prev, isOpen: false }))}
           />
         )}
       </Suspense>
