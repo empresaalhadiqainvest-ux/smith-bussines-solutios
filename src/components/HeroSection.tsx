@@ -57,7 +57,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#00FF41]/20 pb-4 mb-8">
             <div className="flex items-center gap-2 text-xs text-emerald-300/80 font-mono">
               <Terminal className="w-4 h-4 text-[#00FF41]" />
-              <span>Smith Business Solutions · Arquitectura Digital</span>
+              <span>Smith Bussines Solutions 2026 · Arquitectura Digital</span>
             </div>
 
             <button

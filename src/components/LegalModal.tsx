@@ -35,7 +35,7 @@ export const LegalModal: React.FC<LegalModalProps> = ({
           <div>
             <p className="text-xs font-mono text-[#00FF41]">Marco Legal & Confidencialidad</p>
             <h2 id="legal-title" className="font-display text-2xl font-bold text-white mt-1">
-              Smith Business Solutions
+              Smith Bussines Solutions 2026
             </h2>
             <p className="text-xs text-emerald-200/70 mt-1">
               División Tecnológica de {OWNER_CONTACT.holding}

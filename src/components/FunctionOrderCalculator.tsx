@@ -13,15 +13,21 @@ import {
   SentOrderRecord,
 } from '../types';
 import {
+  dispatchOrderNotification,
+  type OrderDispatchResult,
+} from '../services/orderNotificationService';
+import {
   AlertCircle,
   Calendar,
   Check,
   CheckCircle2,
   Copy,
   Layers,
+  Loader2,
   Mail,
   MessageCircle,
   RotateCcw,
+  Send,
   Trash2,
   Zap,
 } from 'lucide-react';
@@ -65,10 +71,14 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
   const [clientContact, setClientContact] = useState('');
   const [notes, setNotes] = useState('');
 
-  // UI feedback states
+  // UI & Async notification states
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const [dispatchFeedback, setDispatchFeedback] = useState<{
+    order: SentOrderRecord;
+    result?: OrderDispatchResult;
+  } | null>(null);
   const [copiedOrder, setCopiedOrder] = useState(false);
-  const [lastSubmittedOrder, setLastSubmittedOrder] = useState<SentOrderRecord | null>(null);
   const [orderHistory, setOrderHistory] = useState<SentOrderRecord[]>(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -135,7 +145,7 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
     );
 
     return [
-      `NUEVA ORDEN DE FUNCIONES - SMITH BUSINESS SOLUTIONS`,
+      `NUEVA ORDEN DE FUNCIONES - ${OWNER_CONTACT.brandName.toUpperCase()}`,
       `Referencia: ${orderId}`,
       `Fecha: ${new Date().toLocaleDateString('es-ES')}`,
       ``,
@@ -167,7 +177,7 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
     }
     if (!clientName.trim() || !companyName.trim() || !clientContact.trim()) {
       setValidationError(
-        'Completa tu nombre, empresa y correo o teléfono de contacto para generar la orden.'
+        'Completa tu nombre, empresa y correo o teléfono de contacto para enviar la orden.'
       );
       return false;
     }
@@ -175,7 +185,10 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
     return true;
   };
 
-  const recordOrder = (channel: 'whatsapp' | 'email' | 'clipboard', orderId: string) => {
+  const buildAndSaveRecord = (
+    channel: 'whatsapp' | 'email' | 'clipboard',
+    orderId: string
+  ): SentOrderRecord => {
     const newRecord: SentOrderRecord = {
       orderId,
       createdAt: new Date().toLocaleTimeString('es-ES', {
@@ -195,15 +208,15 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
 
     const updated = [newRecord, ...orderHistory].slice(0, 5);
     setOrderHistory(updated);
-    setLastSubmittedOrder(newRecord);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     } catch {
       // Ignore storage quota errors
     }
+    return newRecord;
   };
 
-  // Precomputed live URLs so standard <a> links work natively without window.open
+  // Precomputed live URLs for direct fallback links
   const liveOrderId = useMemo(
     () => buildOrderReference(),
     [selectedFunctionIds.length, clientName, companyName]
@@ -228,14 +241,40 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
     OWNER_CONTACT.whatsappNumber
   }?text=${encodeURIComponent(formattedMessage)}`;
 
-  const mailSubject = `Nueva Orden de Funciones [${liveOrderId}] - ${
+  const mailSubject = `[${OWNER_CONTACT.brandName}] Nueva Orden [${liveOrderId}] - ${
     companyName.trim() || 'Cliente Web'
   }`;
   const mailtoHref = `mailto:${OWNER_CONTACT.email}?subject=${encodeURIComponent(
     mailSubject
   )}&body=${encodeURIComponent(formattedMessage)}`;
 
-  const handleDispatchClick = (
+  // Real Endpoint Notification Submit (Webhook / EmailJS / FormSubmit AJAX)
+  const handleSendDirectOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateBeforeDispatch() || isSending) return;
+
+    setIsSending(true);
+    setDispatchFeedback(null);
+
+    const result = await dispatchOrderNotification({
+      orderId: liveOrderId,
+      clientName: clientName.trim(),
+      companyName: companyName.trim(),
+      clientContact: clientContact.trim(),
+      scaleLabel: currentScale.title,
+      priorityLabel: currentPriority.title,
+      estimatedWeeks,
+      functions: selectedFunctions.map((fn) => fn.title),
+      notes: notes.trim(),
+      formattedSummary: formattedMessage,
+    });
+
+    const record = buildAndSaveRecord('email', liveOrderId);
+    setDispatchFeedback({ order: record, result });
+    setIsSending(false);
+  };
+
+  const handleChannelAnchorClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     channel: 'whatsapp' | 'email'
   ) => {
@@ -243,7 +282,8 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
       e.preventDefault();
       return;
     }
-    recordOrder(channel, liveOrderId);
+    const record = buildAndSaveRecord(channel, liveOrderId);
+    setDispatchFeedback({ order: record });
   };
 
   const handleCopyOrder = async () => {
@@ -251,10 +291,11 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
     try {
       await navigator.clipboard.writeText(formattedMessage);
       setCopiedOrder(true);
-      recordOrder('clipboard', liveOrderId);
+      const record = buildAndSaveRecord('clipboard', liveOrderId);
+      setDispatchFeedback({ order: record });
       window.setTimeout(() => setCopiedOrder(false), 2400);
     } catch {
-      setValidationError('No se pudo copiar automáticamente; usa WhatsApp o Correo directo.');
+      setValidationError('No se pudo copiar automáticamente; usa el envío directo.');
     }
   };
 
@@ -272,8 +313,8 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-emerald-200/75 max-w-md">
-            Selecciona las funciones técnicas que requiere tu operación. Recibiré el desglose
-            exacto como orden directa en mi WhatsApp o correo personal.
+            Selecciona las funciones técnicas que requiere tu empresa. La orden se envía en tiempo
+            real a nuestro panel de contacto, correo o WhatsApp.
           </p>
         </div>
 
@@ -462,9 +503,13 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
             </div>
           </div>
 
-          {/* RIGHT 5 COLS: Sticky Personal Order Panel & Direct Dispatch */}
+          {/* RIGHT 5 COLS: Sticky Personal Order Panel & Endpoint Dispatch */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
-            <div className="matrix-panel rounded-2xl p-6 border border-[#00FF41]/45 space-y-6">
+            <form
+              onSubmit={handleSendDirectOrder}
+              className="matrix-panel rounded-2xl p-6 border border-[#00FF41]/45 space-y-6"
+              noValidate
+            >
               {/* Order Summary Header */}
               <div className="flex items-start justify-between gap-4 border-b border-[#00FF41]/20 pb-4">
                 <div>
@@ -563,6 +608,7 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                     <input
                       id="order-client-name"
                       type="text"
+                      required
                       value={clientName}
                       onChange={(e) => {
                         setClientName(e.target.value);
@@ -583,6 +629,7 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                     <input
                       id="order-company-name"
                       type="text"
+                      required
                       value={companyName}
                       onChange={(e) => {
                         setCompanyName(e.target.value);
@@ -604,6 +651,7 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                   <input
                     id="order-client-contact"
                     type="text"
+                    required
                     value={clientContact}
                     onChange={(e) => {
                       setClientContact(e.target.value);
@@ -643,14 +691,32 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                 </div>
               )}
 
-              {/* Direct Dispatch Buttons to Personal Panel (WhatsApp or Email) */}
+              {/* Primary Real HTTP Endpoint Submit + WhatsApp / Mailto / Copy */}
               <div className="space-y-2.5 pt-1">
+                <button
+                  type="submit"
+                  disabled={isSending}
+                  className="w-full py-3.5 px-4 rounded-lg bg-[#00FF41] hover:bg-[#39ff14] disabled:opacity-60 text-[#050805] font-bold text-xs sm:text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {isSending ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Enviando Orden al Endpoint...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Enviar Orden Directa al Correo / Panel</span>
+                    </>
+                  )}
+                </button>
+
                 <a
                   href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => handleDispatchClick(e, 'whatsapp')}
-                  className="w-full py-3.5 px-4 rounded-lg bg-[#00FF41] hover:bg-[#39ff14] text-[#050805] font-bold text-xs sm:text-sm shadow-[0_0_20px_rgba(0,255,65,0.3)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  onClick={(e) => handleChannelAnchorClick(e, 'whatsapp')}
+                  className="w-full py-3 px-4 rounded-lg border border-[#00FF41]/60 hover:border-[#00FF41] bg-[#00FF41]/10 hover:bg-[#00FF41]/20 text-[#00FF41] font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>Enviar Orden a WhatsApp ({OWNER_CONTACT.whatsappDisplay})</span>
@@ -659,17 +725,17 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   <a
                     href={mailtoHref}
-                    onClick={(e) => handleDispatchClick(e, 'email')}
-                    className="py-3 px-4 rounded-lg border border-[#00FF41]/50 hover:border-[#00FF41] bg-[#00FF41]/10 hover:bg-[#00FF41]/20 text-[#00FF41] font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    onClick={(e) => handleChannelAnchorClick(e, 'email')}
+                    className="py-2.5 px-3 rounded-lg border border-[#00FF41]/30 hover:border-[#00FF41]/70 bg-[#030603] text-emerald-100 hover:text-[#00FF41] font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
                     <Mail className="w-3.5 h-3.5" />
-                    <span>Enviar por Correo</span>
+                    <span>Abrir en Correo</span>
                   </a>
 
                   <button
                     type="button"
                     onClick={handleCopyOrder}
-                    className="py-3 px-4 rounded-lg border border-[#00FF41]/30 hover:border-[#00FF41]/70 bg-[#030603] text-emerald-100 hover:text-[#00FF41] font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="py-2.5 px-3 rounded-lg border border-[#00FF41]/30 hover:border-[#00FF41]/70 bg-[#030603] text-emerald-100 hover:text-[#00FF41] font-semibold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
                     {copiedOrder ? (
                       <>
@@ -686,38 +752,54 @@ export const FunctionOrderCalculator: React.FC<FunctionOrderCalculatorProps> = (
                 </div>
 
                 <p className="text-[11px] text-center text-emerald-300/70 pt-1">
-                  Destino directo: {OWNER_CONTACT.email} · WhatsApp {OWNER_CONTACT.whatsappDisplay}
+                  Destino: {OWNER_CONTACT.email} · WhatsApp {OWNER_CONTACT.whatsappDisplay}
                 </p>
               </div>
 
-              {/* Order Confirmation Banner */}
-              {lastSubmittedOrder && (
-                <div className="rounded-xl bg-[#00FF41]/10 border border-[#00FF41] p-4 space-y-2 animate-fade-up">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#00FF41]">
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+              {/* Endpoint / Dispatch Feedback Banner */}
+              {dispatchFeedback && (
+                <div
+                  className={`rounded-xl p-4 space-y-2 animate-fade-up border ${
+                    dispatchFeedback.result?.ok === false
+                      ? 'bg-amber-950/50 border-amber-400/50'
+                      : 'bg-[#00FF41]/10 border-[#00FF41]'
+                  }`}
+                >
+                  <div
+                    className={`flex items-center gap-2 text-xs font-bold ${
+                      dispatchFeedback.result?.ok === false ? 'text-amber-300' : 'text-[#00FF41]'
+                    }`}
+                  >
+                    {dispatchFeedback.result?.ok === false ? (
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                    ) : (
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    )}
                     <span>
-                      Orden {lastSubmittedOrder.orderId} generada ({lastSubmittedOrder.functions.length}{' '}
+                      Orden {dispatchFeedback.order.orderId} ({dispatchFeedback.order.functions.length}{' '}
                       funciones)
                     </span>
                   </div>
-                  <p className="text-xs text-emerald-100/85 leading-relaxed">
-                    Tu orden para <strong>{lastSubmittedOrder.companyName}</strong> está lista en tu
-                    canal seleccionado ({lastSubmittedOrder.channel === 'whatsapp'
-                      ? 'WhatsApp'
-                      : lastSubmittedOrder.channel === 'email'
-                      ? 'Correo electrónico'
-                      : 'Portapapeles'}
-                    ).
+                  <p className="text-xs text-emerald-100/90 leading-relaxed">
+                    {dispatchFeedback.result
+                      ? dispatchFeedback.result.message
+                      : `Tu orden para ${dispatchFeedback.order.companyName} se abrió correctamente en ${
+                          dispatchFeedback.order.channel === 'whatsapp'
+                            ? 'WhatsApp'
+                            : dispatchFeedback.order.channel === 'email'
+                            ? 'tu cliente de correo'
+                            : 'el portapapeles'
+                        }.`}
                   </p>
                 </div>
               )}
-            </div>
+            </form>
 
             {/* Recent Local Dispatched Orders (if any) */}
             {orderHistory.length > 0 && (
               <div className="matrix-panel rounded-xl p-4 space-y-2.5">
                 <p className="text-xs font-mono text-emerald-300/80">
-                  Órdenes recientes generadas en este dispositivo
+                  Órdenes recientes enviadas desde este dispositivo
                 </p>
                 <div className="space-y-1.5">
                   {orderHistory.map((item) => (

@@ -22,7 +22,7 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Brand Summary */}
           <div className="space-y-2">
             <span className="font-display text-lg font-bold tracking-wider text-neon block">
-              Smith Business Solutions
+              Smith Bussines Solutions 2026
             </span>
             <p className="text-emerald-100/70 text-xs max-w-md leading-relaxed">
               Consultoría estratégica, automatización con IA, infraestructura cloud y ciberseguridad.
@@ -61,8 +61,8 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Contact & Copyright Row */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-emerald-300/70">
           <p>
-            © {new Date().getFullYear()} Smith Business Solutions · {OWNER_CONTACT.holding}. Todos los
-            derechos reservados.
+            © {new Date().getFullYear()} Smith Bussines Solutions 2026 · {OWNER_CONTACT.holding}. Todos
+            los derechos reservados.
           </p>
 
           <div className="flex flex-wrap items-center gap-4">

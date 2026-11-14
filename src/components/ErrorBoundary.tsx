@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             <div className="space-y-2">
               <h2 className="font-display text-xl font-bold text-white">
-                Smith Business Solutions
+                Smith Bussines Solutions 2026
               </h2>
               <p className="text-xs text-emerald-200/75 leading-relaxed">
                 Se detectó un error inesperado al cargar la interfaz. Recarga la página o contáctanos

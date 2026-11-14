@@ -20,7 +20,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           href="#inicio"
           className="font-display text-lg sm:text-xl font-bold tracking-wider text-neon whitespace-nowrap shrink-0 hover:opacity-90 transition-opacity"
         >
-          Smith Business Solutions
+          Smith Bussines Solutions 2026
         </a>
 
         {/* Zone 2: Concise Single-Line Navigation Links */}

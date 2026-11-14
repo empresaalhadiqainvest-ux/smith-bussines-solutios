@@ -7,6 +7,7 @@ import {
 } from '../types';
 
 export const OWNER_CONTACT = {
+  brandName: 'Smith Bussines Solutions 2026',
   email: 'empresaalhadiqainvest@gmail.com',
   whatsappNumber: '584220273766',
   whatsappDisplay: '0422 027 3766',
