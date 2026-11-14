@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Cookie, ShieldCheck, X } from 'lucide-react';
+import { ShieldCheck, X } from 'lucide-react';
 
 interface CookieBannerProps {
   onOpenPrivacy: () => void;
@@ -11,9 +11,8 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onOpenPrivacy }) => 
   useEffect(() => {
     const consent = localStorage.getItem('sbs_cookie_consent');
     if (!consent) {
-      // Delay display slightly for smooth page entry
-      const timer = setTimeout(() => setIsVisible(true), 1500);
-      return () => clearTimeout(timer);
+      const timer = window.setTimeout(() => setIsVisible(true), 1500);
+      return () => window.clearTimeout(timer);
     }
   }, []);
 
@@ -32,55 +31,50 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ onOpenPrivacy }) => 
   return (
     <aside
       aria-label="Consentimiento de Cookies"
-      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 glass-panel-elevated border border-white/15 p-5 rounded-2xl shadow-2xl animate-fade-up text-slate-200"
+      className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 matrix-panel border border-[#00FF41]/40 p-5 rounded-xl animate-fade-up text-emerald-100"
     >
-      <div className="flex items-start gap-3.5">
-        <div className="p-2 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-400 shrink-0 mt-0.5">
-          <Cookie className="w-5 h-5" />
-        </div>
+      <div className="flex items-start gap-3">
+        <ShieldCheck className="w-5 h-5 text-[#00FF41] shrink-0 mt-0.5" />
 
-        <div className="space-y-2 text-xs">
+        <div className="space-y-2.5 text-xs flex-1">
           <div className="flex items-center justify-between gap-2">
-            <h4 className="font-bold text-white text-sm flex items-center gap-1.5">
-              <span>Privacidad & Cookies</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-            </h4>
+            <h4 className="font-bold text-white text-sm">Privacidad y Cookies</h4>
             <button
               type="button"
               onClick={handleEssentialOnly}
-              className="text-slate-400 hover:text-white p-1 rounded transition-colors cursor-pointer"
-              title="Cerrar y aceptar solo esenciales"
+              className="text-emerald-300/70 hover:text-[#00FF41] p-1 rounded transition-colors cursor-pointer"
               aria-label="Cerrar aviso de cookies"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          <p className="text-slate-300 leading-relaxed text-[11px]">
-            Utilizamos cookies técnicas y de telemetría para optimizar la experiencia interactiva, recordar cálculos de presupuesto y asegurar el funcionamiento 3D de la plataforma.
+          <p className="text-emerald-100/75 leading-relaxed text-[11px]">
+            Usamos almacenamiento local técnico para conservar tu selección de funciones e historial
+            de órdenes en este dispositivo.
           </p>
 
-          <div className="flex items-center gap-2 pt-2">
+          <div className="flex flex-wrap items-center gap-2 pt-1">
             <button
               type="button"
               onClick={handleAcceptAll}
-              className="py-1.5 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold text-[11px] transition-colors cursor-pointer shadow-sm shadow-amber-500/20"
+              className="py-1.5 px-3 rounded-lg bg-[#00FF41] hover:bg-[#39ff14] text-[#050805] font-bold text-[11px] transition-colors cursor-pointer"
             >
-              Aceptar Todo
+              Aceptar
             </button>
             <button
               type="button"
               onClick={handleEssentialOnly}
-              className="py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-[11px] font-medium transition-colors cursor-pointer"
+              className="py-1.5 px-3 rounded-lg bg-[#030603] hover:bg-[#00FF41]/10 text-emerald-100 border border-[#00FF41]/30 text-[11px] font-medium transition-colors cursor-pointer"
             >
               Solo Esenciales
             </button>
             <button
               type="button"
               onClick={onOpenPrivacy}
-              className="text-[11px] text-amber-400 hover:underline ml-auto cursor-pointer"
+              className="text-[11px] text-[#00FF41] hover:underline ml-auto cursor-pointer"
             >
-              Ver Política
+              Privacidad
             </button>
           </div>
         </div>

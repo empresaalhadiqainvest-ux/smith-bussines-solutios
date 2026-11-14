@@ -1,5 +1,6 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Send } from 'lucide-react';
+import { OWNER_CONTACT } from '../data/servicesData';
 
 interface Props {
   children: ReactNode;
@@ -30,37 +31,39 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#070b16] text-slate-100 flex items-center justify-center p-6 selection:bg-amber-400 selection:text-slate-950 font-sans">
-          <div className="max-w-md w-full glass-panel-elevated p-8 rounded-2xl border border-amber-400/30 text-center space-y-6 shadow-2xl">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400">
-              <AlertTriangle className="w-7 h-7" />
+        <div className="min-h-screen bg-[#050805] text-emerald-50 flex items-center justify-center p-6 font-sans">
+          <div className="max-w-md w-full matrix-panel p-8 rounded-2xl border border-[#00FF41]/40 text-center space-y-6">
+            <div className="w-12 h-12 mx-auto rounded-xl bg-[#00FF41]/10 border border-[#00FF41]/35 flex items-center justify-center text-[#00FF41]">
+              <AlertTriangle className="w-6 h-6" />
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+              <h2 className="font-display text-xl font-bold text-white">
                 Smith Business Solutions
               </h2>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                Se detectó una excepción temporal de renderizado en el navegador. Puedes recargar la plataforma o comunicarte con nuestro equipo técnico.
+              <p className="text-xs text-emerald-200/75 leading-relaxed">
+                Se detectó un error inesperado al cargar la interfaz. Recarga la página o contáctanos
+                directamente por WhatsApp.
               </p>
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <button
                 type="button"
                 onClick={this.handleReload}
-                className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-300 via-amber-400 to-amber-300 hover:brightness-110 text-slate-950 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer transition-all shadow-lg shadow-amber-500/20"
+                className="flex-1 py-3 px-4 rounded-lg bg-[#00FF41] hover:bg-[#39ff14] text-[#050805] font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-colors"
               >
-                <RefreshCw className="w-4 h-4 text-slate-950" />
-                <span>Recargar Plataforma</span>
+                <RefreshCw className="w-4 h-4" />
+                <span>Recargar Página</span>
               </button>
 
               <a
-                href="https://wa.me/584220273766?text=Hola%20Smith%20Business%20Solutions.%20Hubo%20un%20problema%20al%20cargar%20la%20plataforma."
+                href={`https://wa.me/${OWNER_CONTACT.whatsappNumber}?text=${encodeURIComponent(
+                  'Hola Smith Business Solutions, tuve un problema al cargar la página.'
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-3 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 text-emerald-300 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
-                title="WhatsApp: 0422 027 3766"
+                className="py-3 px-4 rounded-lg border border-[#00FF41]/40 text-[#00FF41] hover:bg-[#00FF41]/10 font-semibold text-xs flex items-center justify-center gap-2 transition-colors"
               >
                 <Send className="w-4 h-4" />
                 <span>WhatsApp</span>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { FileText, Lock, ShieldCheck, X, CheckCircle2, Send } from 'lucide-react';
+import { Check, FileText, Lock, Send, X } from 'lucide-react';
+import { OWNER_CONTACT } from '../data/servicesData';
 
 export type LegalTab = 'terms' | 'privacy';
 
@@ -23,172 +24,156 @@ export const LegalModal: React.FC<LegalModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="legal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-up overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-up overflow-y-auto"
+      onClick={onClose}
     >
-      <div className="relative w-full max-w-3xl glass-panel-elevated border border-white/20 rounded-2xl shadow-2xl p-6 sm:p-8 my-8 text-slate-200">
-        {/* Close Button */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
-          aria-label="Cerrar modal legal"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Modal Header */}
-        <div className="space-y-3 pb-6 border-b border-white/10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-amber-300 bg-amber-400/10 border border-amber-400/20">
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-            <span>Marco Legal & Gobernanza Corporativa</span>
+      <div
+        className="relative w-full max-w-2xl matrix-panel border border-[#00FF41]/55 rounded-2xl p-6 sm:p-8 my-8 text-emerald-50 space-y-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-4 border-b border-[#00FF41]/20 pb-5">
+          <div>
+            <p className="text-xs font-mono text-[#00FF41]">Marco Legal & Confidencialidad</p>
+            <h2 id="legal-title" className="font-display text-2xl font-bold text-white mt-1">
+              Smith Business Solutions
+            </h2>
+            <p className="text-xs text-emerald-200/70 mt-1">
+              División Tecnológica de {OWNER_CONTACT.holding}
+            </p>
           </div>
-          <h2 id="legal-title" className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Smith Business Solutions
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-400">
-            División de Tecnología e Inteligencia Artificial de Al-Hadiqa Invest Holding.
-          </p>
 
-          {/* Segmented Control Tabs */}
-          <div className="flex gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => setActiveTab('terms')}
-              className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
-                activeTab === 'terms'
-                  ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md shadow-amber-500/20'
-                  : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Términos del Servicio</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('privacy')}
-              className={`px-4 py-2 text-xs font-bold rounded-xl border transition-all cursor-pointer flex items-center gap-2 ${
-                activeTab === 'privacy'
-                  ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-md shadow-amber-500/20'
-                  : 'bg-white/5 hover:bg-white/10 text-slate-300 border-white/10'
-              }`}
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Política de Privacidad</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-2 rounded-lg text-emerald-200 hover:text-[#00FF41] hover:bg-[#00FF41]/10 transition-colors cursor-pointer"
+            aria-label="Cerrar modal legal"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {/* Modal Content Scroll Area */}
-        <div className="py-6 max-h-[60vh] overflow-y-auto space-y-6 text-xs sm:text-sm text-slate-300 leading-relaxed pr-2">
+        {/* Tabs */}
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveTab('terms')}
+            className={`px-4 py-2 text-xs font-bold rounded-lg border transition-colors cursor-pointer inline-flex items-center gap-2 ${
+              activeTab === 'terms'
+                ? 'bg-[#00FF41] text-[#050805] border-[#00FF41]'
+                : 'bg-[#030603] text-emerald-100 border-[#00FF41]/25 hover:border-[#00FF41]/60'
+            }`}
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Términos del Servicio</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('privacy')}
+            className={`px-4 py-2 text-xs font-bold rounded-lg border transition-colors cursor-pointer inline-flex items-center gap-2 ${
+              activeTab === 'privacy'
+                ? 'bg-[#00FF41] text-[#050805] border-[#00FF41]'
+                : 'bg-[#030603] text-emerald-100 border-[#00FF41]/25 hover:border-[#00FF41]/60'
+            }`}
+          >
+            <Lock className="w-3.5 h-3.5" />
+            <span>Política de Privacidad</span>
+          </button>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="max-h-[55vh] overflow-y-auto space-y-5 text-xs sm:text-sm text-emerald-100/85 leading-relaxed pr-2">
           {activeTab === 'terms' ? (
-            <div className="space-y-5">
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                  1. Objeto y Alcance de los Servicios
+            <>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  1. Alcance de las Órdenes de Funciones
                 </h3>
                 <p>
-                  Smith Business Solutions (SBS) presta servicios de consultoría estratégica, arquitectura de software en la nube, desarrollo de tiendas e-commerce de alto rendimiento, agentes de IA conversacionales y auditorías técnicas orientadas a la optimización de ingresos empresariales.
+                  Las órdenes generadas mediante el configurador en línea describen los módulos
+                  técnicos, escala operativa y prioridad solicitada por el cliente. Cada orden es
+                  revisada por nuestro equipo para definir los detalles de arquitectura e inicio.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                  2. Estimaciones y Presupuestos
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  2. Acuerdos de Confidencialidad (NDA)
                 </h3>
                 <p>
-                  Las cifras arrojadas por la calculadora interactiva de proyectos y el auditor de e-commerce constituyen cotizaciones orientativas sujetas a validación técnica formal mediante propuesta comercial firmada entre las partes.
+                  Toda información operativa, procesos internos o especificaciones compartidas a
+                  través de WhatsApp o correo corporativo se protege bajo estricta confidencialidad y
+                  acuerdo NDA bilateral antes de cualquier acceso a sistemas.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                  3. Acuerdos de Confidencialidad (NDA)
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  3. Propiedad Intelectual
                 </h3>
                 <p>
-                  SBS garantiza que cualquier dato de facturación, bases de clientes, inventarios o información comercial suministrada por el cliente está amparada por estricta confidencialidad profesional, formalizándose mediante NDA bilateral previo a la fase de integración técnica.
+                  Los desarrollos a medida, automatizaciones y código fuente desplegados para el
+                  cliente son transferidos conforme a lo estipulado en la orden de trabajo formal.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-amber-400" />
-                  4. Propiedad Intelectual
-                </h3>
-                <p>
-                  Una vez completados los pagos contractuales pactados, el cliente ostenta la titularidad de los entregables a medida desarrollados específicamente para su negocio, garantizando autonomía total sobre sus canales comerciales.
-                </p>
-              </section>
-            </div>
+              </div>
+            </>
           ) : (
-            <div className="space-y-5">
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  1. Recopilación de Información
+            <>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  1. Datos Recopilados
                 </h3>
                 <p>
-                  Solo recopilamos los datos estrictamente necesarios ingresados voluntariamente a través del formulario multi-paso, la calculadora o las sesiones de consulta (nombre, empresa, correo electrónico y número de teléfono corporativo).
+                  Únicamente procesamos los datos proporcionados voluntariamente en tu orden
+                  (nombre, empresa, método de contacto y módulos solicitados) para dar respuesta por
+                  WhatsApp o correo electrónico.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  2. Finalidad del Tratamiento de Datos
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  2. Almacenamiento Local y Privacidad
                 </h3>
                 <p>
-                  Los datos se utilizan exclusivamente para: (a) formular propuestas técnicas y económicas detalladas; (b) coordinar sesiones de consultoría por Google Meet o WhatsApp; (c) dar cumplimiento a los acuerdos contractuales suscritos.
+                  Tu navegador guarda temporalmente el historial reciente de órdenes y tu
+                  preferencia de cookies únicamente en almacenamiento local para tu conveniencia.
+                  Nunca vendemos ni compartimos información con terceros.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  3. No Comercialización con Terceros
+              </div>
+              <div className="space-y-1.5">
+                <h3 className="text-sm font-bold text-[#00FF41] flex items-center gap-2">
+                  <Check className="w-4 h-4" />
+                  3. Contacto Directo
                 </h3>
                 <p>
-                  Smith Business Solutions nunca vende, arrienda ni transfiere bases de datos o información confidencial de clientes a intermediarios ni redes de publicidad de terceros.
+                  Para cualquier solicitud de eliminación o modificación de registros puedes
+                  escribir directamente a <strong>{OWNER_CONTACT.email}</strong>.
                 </p>
-              </section>
-
-              <section className="space-y-2">
-                <h3 className="text-base font-bold text-white flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  4. Derechos de Acceso y Cancelación (ARCO)
-                </h3>
-                <p>
-                  Cualquier representante corporativo puede solicitar en cualquier momento la modificación o eliminación total de sus registros comunicándose directamente a nuestro canal legal: <strong>empresaalhadiqainvest@gmail.com</strong>.
-                </p>
-              </section>
-            </div>
+              </div>
+            </>
           )}
         </div>
 
-        {/* Modal Footer */}
-        <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <span className="text-slate-400">
-            Contacto oficial: <strong>empresaalhadiqainvest@gmail.com</strong> · WhatsApp: <strong>0422 027 3766</strong>
-          </span>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
+        {/* Footer */}
+        <div className="pt-4 border-t border-[#00FF41]/20 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <span className="text-emerald-300/75">{OWNER_CONTACT.email}</span>
+          <div className="flex items-center gap-3">
             <a
-              href="https://wa.me/584220273766?text=Hola%20Smith%20Business%20Solutions.%20Tengo%20una%20consulta%20legal%20o%20contractual."
+              href={`https://wa.me/${OWNER_CONTACT.whatsappNumber}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 font-semibold border border-emerald-400/30 flex items-center gap-2 transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-lg border border-[#00FF41]/40 text-[#00FF41] hover:bg-[#00FF41]/10 font-semibold inline-flex items-center gap-1.5 transition-colors"
             >
               <Send className="w-3.5 h-3.5" />
-              <span>WhatsApp Legal</span>
+              <span>WhatsApp</span>
             </a>
             <button
               type="button"
               onClick={onClose}
-              className="py-2.5 px-5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-[#00FF41] text-[#050805] font-bold hover:bg-[#39ff14] transition-colors cursor-pointer"
             >
-              Entendido
+              Cerrar
             </button>
           </div>
         </div>

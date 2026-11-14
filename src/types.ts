@@ -1,83 +1,44 @@
-export type SolutionType = 'automation' | 'software' | 'consulting';
-export type ProjectScale = 'startup' | 'pyme' | 'corporate';
-export type DeliverySpeed = 'standard' | 'priority' | 'express';
+export type PillarId = 'estrategia' | 'automatizacion' | 'cloud' | 'ciberseguridad';
 
-export interface CalculatorState {
-  solutionType: SolutionType;
-  scale: ProjectScale;
-  deliverySpeed: DeliverySpeed;
-  selectedAddons: string[];
-}
+export type OperationalScale = 'startup' | 'pyme' | 'corporativo';
 
-export interface ServiceItem {
-  id: string;
-  solutionType: SolutionType;
+export type DeploymentPriority = 'estandar' | 'prioritario' | 'express';
+
+export interface CapabilityPillar {
+  id: PillarId;
+  indexLabel: string;
   title: string;
-  shortDesc: string;
+  summary: string;
   fullDesc: string;
-  image: string;
-  tag: string;
   deliverables: string[];
-  technologies: string[];
-  typicalTimeline: string;
-  roiMetric: string;
-  startingPrice: number;
+  presetFunctionIds: string[];
 }
 
-export interface ProposalFormData {
-  fullName: string;
-  companyName: string;
-  email: string;
-  phone: string;
-  solutionType: SolutionType;
-  scale: ProjectScale;
-  deliverySpeed: DeliverySpeed;
-  addons: string[];
-  estimatedTotal: number;
-  estimatedWeeks: number;
-  additionalNotes: string;
-}
-
-export type WhitepaperCategory =
-  | 'all'
-  | 'ai'
-  | 'fintech'
-  | 'architecture'
-  | 'operations';
-
-export interface WhitepaperAuthor {
-  name: string;
-  role: string;
-  avatar: string;
-}
-
-export interface WhitepaperContentSection {
-  heading: string;
-  body: string;
-  takeaway?: string;
-}
-
-export interface WhitepaperItem {
+export interface SelectableFunction {
   id: string;
+  pillar: PillarId;
   title: string;
-  slug: string;
-  category: 'ai' | 'fintech' | 'architecture' | 'operations';
-  categoryLabel: string;
-  publishDate: string;
-  readTime: string;
-  fileFormat: string;
-  fileSize: string;
-  downloadCount: number;
-  featured?: boolean;
-  executiveSummary: string;
-  keyFindings: string[];
-  metrics: {
-    label: string;
-    value: string;
-  }[];
-  author: WhitepaperAuthor;
-  tags: string[];
-  tableOfContents: string[];
-  fullSections: WhitepaperContentSection[];
+  description: string;
+  sprintDays: number;
 }
 
+export interface ScenarioPreset {
+  id: string;
+  label: string;
+  description: string;
+  functionIds: string[];
+}
+
+export interface SentOrderRecord {
+  orderId: string;
+  createdAt: string;
+  channel: 'whatsapp' | 'email' | 'clipboard';
+  clientName: string;
+  companyName: string;
+  clientContact: string;
+  scaleLabel: string;
+  priorityLabel: string;
+  estimatedWeeks: number;
+  functions: string[];
+  notes: string;
+}
