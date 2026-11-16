@@ -13,6 +13,7 @@ export const OWNER_CONTACT = {
   whatsappDisplay: '0422 027 3766',
   holding: 'Al-Hadiqa Invest Holding',
   location: 'Maturín, Monagas, Venezuela',
+  businessAppUrl: 'https://sistema-de-gestion-para-negocios.vercel.app/',
 };
 
 export const CAPABILITY_PILLARS: CapabilityPillar[] = [

@@ -46,6 +46,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             Configurador
           </a>
+          <a
+            href="#faq"
+            className="hover:text-[#00FF41] hover:underline underline-offset-4 transition-colors whitespace-nowrap shrink-0"
+          >
+            FAQ
+          </a>
         </nav>
 
         {/* Zone 3: Primary CTA + Mobile Menu Toggle */}
@@ -96,6 +102,13 @@ export const Navbar: React.FC<NavbarProps> = ({
             className="block px-3 py-2.5 rounded-lg text-sm text-emerald-100 hover:text-[#00FF41] hover:bg-[#00FF41]/10 transition-colors"
           >
             Configurador de Orden
+          </a>
+          <a
+            href="#faq"
+            onClick={() => setMobileOpen(false)}
+            className="block px-3 py-2.5 rounded-lg text-sm text-emerald-100 hover:text-[#00FF41] hover:bg-[#00FF41]/10 transition-colors"
+          >
+            Preguntas Frecuentes
           </a>
         </div>
       )}

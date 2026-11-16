@@ -41,6 +41,17 @@ export const Footer: React.FC<FooterProps> = ({
             <a href="#configurador" className="hover:text-[#00FF41] transition-colors">
               Configurador
             </a>
+            <a href="#faq" className="hover:text-[#00FF41] transition-colors">
+              Preguntas Frecuentes
+            </a>
+            <a
+              href={OWNER_CONTACT.businessAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#00FF41] transition-colors"
+            >
+              App de Gestión
+            </a>
             <button
               type="button"
               onClick={onOpenTerms}

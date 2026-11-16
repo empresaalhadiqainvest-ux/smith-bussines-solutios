@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { CapabilitiesSection } from './components/CapabilitiesSection';
 import { FunctionOrderCalculator } from './components/FunctionOrderCalculator';
+import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { CookieBanner } from './components/CookieBanner';
 import type { CapabilityPillar } from './types';
@@ -51,6 +52,14 @@ export default function App() {
     scrollToSection('configurador');
   };
 
+  const handleOrderBusinessApp = () => {
+    const merged = Array.from(
+      new Set([...selectedFunctionIds, 'cloud-panel', 'cloud-web', 'est-capacitacion'])
+    );
+    setSelectedFunctionIds(merged);
+    scrollToSection('configurador');
+  };
+
   return (
     <div className="min-h-screen bg-[#050805] text-emerald-50 flex flex-col relative">
       {/* Lightweight Matrix Digital Rain Backdrop */}
@@ -79,11 +88,12 @@ export default function App() {
           onCycleRainIntensity={cycleRainIntensity}
         />
 
-        {/* 02. Core 4 Capabilities */}
+        {/* 02. Core 4 Capabilities + Entrepreneur Management Web App */}
         <CapabilitiesSection
           selectedFunctionIds={selectedFunctionIds}
           onInspectPillar={(pillar) => setInspectedPillar(pillar)}
           onAddPillarFunctions={handleAddPillarFunctions}
+          onOrderBusinessApp={handleOrderBusinessApp}
         />
 
         {/* 03. Function-Based Order Calculator (Zero Prices -> WhatsApp & Email Dispatch) */}
@@ -91,6 +101,9 @@ export default function App() {
           selectedFunctionIds={selectedFunctionIds}
           onChangeSelectedFunctions={setSelectedFunctionIds}
         />
+
+        {/* 04. Frequently Asked Questions Accordion */}
+        <FAQSection onScrollToCalculator={() => scrollToSection('configurador')} />
       </main>
 
       <Footer
